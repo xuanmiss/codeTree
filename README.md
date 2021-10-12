@@ -47,6 +47,15 @@
 - Apache Maven 3.6.3
 
 
+### feature
+
+- [x] 菜单树展示和折叠收起
+- [x] 详情面板开发
+- [x] git仓库信息获取和展示
+- [x] README的文件展示
+- [x] 添加新项目弹窗
+- [x] 允许调整目录结构，上下级
+
 ### 示例图
 
 - CodeProject Detail
