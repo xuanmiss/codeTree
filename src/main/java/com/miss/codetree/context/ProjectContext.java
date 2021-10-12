@@ -9,6 +9,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +27,9 @@ public class ProjectContext {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 //    private static final File f = new File(CodeTreeApplication.class.getResource("/config.json").getFile());
 
-    private static final File f = new File("/Users/peishengzhang/IdeaProjects/projects/miss-demo/javafx/CodeTree/src/main/resources/config.json");
+    private static final String userHome = System.getProperties().getProperty("user.home");
+
+    private static final File f = new File(userHome + File.separator + ".codeTreeConfig.json");
 
     public static CodeProject rootCodeProject = initRootProject();
 
@@ -65,12 +68,21 @@ public class ProjectContext {
 
     private static CodeProject initRootProject() {
         CodeProject codeProject = new CodeProject();
-        try {
-            codeProject = objectMapper.readValue(f, CodeProject.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (f.exists()) {
+            try {
+                codeProject = objectMapper.readValue(f, CodeProject.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return codeProject;
+        }else {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return codeProject;
         }
-        return codeProject;
     }
 
 
@@ -154,7 +166,7 @@ public class ProjectContext {
             projectMap.remove(codeProject.getProjectCode());
         }
         projectList = projectList.stream()
-                .filter(codeProject1 -> codeProject1.getProjectCode() != codeProject.getProjectCode())
+                .filter(codeProject1 -> !codeProject1.getProjectCode().equals(codeProject.getProjectCode()))
                 .collect(Collectors.toList());
         deleteFromRootCodeProject(Collections.singletonList(rootCodeProject), codeProject);
         saveCodeProjectConfig(rootCodeProject);
@@ -167,9 +179,12 @@ public class ProjectContext {
             if (subProjectList != null && !subProjectList.isEmpty()) {
                 for (int i = 0; i < subProjectList.size(); i++) {
                     if (subProjectList.get(i).getProjectCode().equalsIgnoreCase(codeProject.getProjectCode())) {
-                        project.getSubProjectList().remove(i);
                         if (subProjectList.get(i).getSubProjectList() != null && !subProjectList.get(i).getSubProjectList().isEmpty()) {
-                            project.getSubProjectList().addAll(subProjectList.get(i).getSubProjectList());
+                            LinkedList<CodeProject> ssubProjects = subProjectList.get(i).getSubProjectList();
+                            subProjectList.remove(i);
+                            subProjectList.addAll(ssubProjects);
+                        }else {
+                            subProjectList.remove(i);
                         }
                         return;
                     }
