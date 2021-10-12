@@ -225,6 +225,9 @@ public class CodeTreeController implements Initializable {
 //            int i = treeView.getSelectionModel().getSelectedIndex();
             TreeItem<CodeProject> treeItem = treeView.getSelectionModel().getSelectedItem();
             CodeProject codeProject = treeItem.getValue();
+            if (!treeItem.isLeaf()) {
+                treeView.getSelectionModel().getSelectedItem().getParent().getChildren().addAll(treeItem.getChildren());
+            }
             treeView.getSelectionModel().getSelectedItem().getParent().getChildren().remove(treeItem);
             ProjectContext.removeCodeProject(codeProject);
         } else {
