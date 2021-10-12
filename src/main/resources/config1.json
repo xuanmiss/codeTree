@@ -1,0 +1,46 @@
+{
+  "projectCode": "根目录",
+  "projectDir": "/root",
+  "projectName": "根目录",
+  "projectType": "catalog",
+  "subProjectList": [
+    {
+      "projectCode": "目录1",
+      "projectDir": "/root/1",
+      "projectName": "目录1",
+      "projectType": "project"
+    },
+    {
+      "projectCode": "目录2",
+      "projectDir": "/root/2",
+      "projectName": "目录2",
+      "projectType": "project"
+    },
+    {
+      "projectCode": "目录3",
+      "projectDir": "/root/3",
+      "projectName": "目录3",
+      "projectType": "catalog",
+      "subProjectList": [
+        {
+          "projectCode": "目录3-1",
+          "projectDir": "/root/3/1",
+          "projectName": "目录3-1",
+          "projectType": "project"
+        },
+        {
+          "projectCode": "目录3-2",
+          "projectDir": "/root/3/2",
+          "projectName": "目录3-1",
+          "projectType": "project"
+        },
+        {
+          "projectCode": "目录3-3",
+          "projectDir": "/root/3/3",
+          "projectName": "目录3-3",
+          "projectType": "catalog"
+        }
+      ]
+    }
+  ]
+}
