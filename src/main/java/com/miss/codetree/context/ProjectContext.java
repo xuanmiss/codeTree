@@ -116,7 +116,7 @@ public class ProjectContext {
 
     }
 
-    private static void saveCodeProjectConfig(CodeProject rootCodeProject) {
+    public static void saveCodeProjectConfig(CodeProject rootCodeProject) {
         try {
             objectMapper.writeValue(f, rootCodeProject);
         } catch (IOException e) {

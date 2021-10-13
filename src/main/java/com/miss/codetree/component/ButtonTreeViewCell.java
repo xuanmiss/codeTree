@@ -2,6 +2,7 @@ package com.miss.codetree.component;
 
 import com.miss.codetree.CodeTreeApplication;
 import com.miss.codetree.constant.ImageConstant;
+import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.controller.ProjectModalController;
 import com.miss.codetree.entity.CodeProject;
 import javafx.fxml.FXMLLoader;
@@ -164,23 +165,26 @@ public class ButtonTreeViewCell implements Callback<TreeView<CodeProject>, TreeC
         // dropping on parent node makes it the first child
         if (Objects.equals(droggedItemParent, thisItem)) {
             thisItem.getChildren().add(0, draggedItem);
+            draggedItem.getValue().setParentProjectCode(thisItem.getParent().getValue().getProjectCode());
             thisItem.getValue().getSubProjectList().add(0, draggedItem.getValue());
             treeView.getSelectionModel().select(draggedItem);
         } else {
             if ("catalog".equals(thisItem.getValue().getProjectType())) {
                 // 如果拖入了文件夹，则更换parent
                 thisItem.getChildren().add(0, draggedItem);
+                draggedItem.getValue().setParentProjectCode(thisItem.getValue().getProjectCode());
                 thisItem.getValue().getSubProjectList().add(0, draggedItem.getValue());
             } else {
                 // add to new location
                 int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
                 thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
+                draggedItem.getValue().setParentProjectCode(thisItem.getParent().getValue().getProjectCode());
                 thisItem.getParent().getValue().getSubProjectList().add(indexInParent + 1, draggedItem.getValue());
             }
         }
-
         treeView.getSelectionModel().select(draggedItem);
         e.setDropCompleted(success);
+        ProjectContext.saveCodeProjectConfig(treeView.getRoot().getValue());
     }
 
     private void clearDropLocation() {
