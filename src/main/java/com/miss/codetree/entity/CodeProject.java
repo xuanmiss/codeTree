@@ -1,5 +1,7 @@
 package com.miss.codetree.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -11,7 +13,18 @@ import java.util.Objects;
  * @since:
  * @history: 1.2021/9/10 created by miss
  */
-public class CodeProject {
+public class CodeProject implements Serializable {
+
+
+
+
+
+    @Serial
+    private static final long serialVersionUID;
+
+    static {
+        serialVersionUID = -2748788859786288250L;
+    }
 
     // 唯一的编码
     private String projectCode;

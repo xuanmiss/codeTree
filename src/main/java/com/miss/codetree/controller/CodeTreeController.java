@@ -39,59 +39,59 @@ public class CodeTreeController implements Initializable {
 
 
     public static String mdHtmlContent = """
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <title>ByteMD example</title>
-                <link rel="stylesheet" href="https://unpkg.com/bytemd/dist/index.min.css"/>
-                <link rel="stylesheet" href="https://unpkg.com/github-markdown-css"/>
-                <script src="https://unpkg.com/bytemd"></script>
-                <script src="https://unpkg.com/@bytemd/plugin-gfm"></script>
-                <script src="https://unpkg.com/@bytemd/plugin-highlight"></script>
-                <style>
-                    .bytemd {
-                        height: calc(100vh - 50px);
-                    }
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8"/>
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                            <title>ByteMD example</title>
+                            <link rel="stylesheet" href="https://unpkg.com/bytemd/dist/index.min.css"/>
+                            <link rel="stylesheet" href="https://unpkg.com/github-markdown-css"/>
+                            <script src="https://unpkg.com/bytemd"></script>
+                            <script src="https://unpkg.com/@bytemd/plugin-gfm"></script>
+                            <script src="https://unpkg.com/@bytemd/plugin-highlight"></script>
+                            <style>
+                                .bytemd {
+                                    height: calc(100vh - 50px);
+                                }
 
-                    .footer {
-                        width: 100%;
-                        height: 30px;
-                        left: 0;
-                        position: absolute;
-                        bottom: 0;
-                        text-align: center;
-                    }
-                </style>
-            </head>
-            <body>
-//            <div class="footer">
-//                <a href="https://github.com/bytedance/bytemd">bytemd</a>
-//            </div>
-            <script>
-                const plugins = [bytemdPluginGfm(), bytemdPluginHighlight()];
-                const editor = new bytemd.Editor({
-                    target: document.body,
-                    props: {
-                        value: '',
-                        plugins,
-                    },
-                });
-                editor.$on('change', (e) => {
-                    editor.$set({value: e.detail.value});
-                });
-                var jsConnector = {
-                        setMdContent: function (content) {
-                            editor.$set({value: content})
-                        }
-                    };
-                function getJsConnector() {
-                    return jsConnector;
-                }
-            </script>
-            </body>
-            </html>""";
+                                .footer {
+                                    width: 100%;
+                                    height: 30px;
+                                    left: 0;
+                                    position: absolute;
+                                    bottom: 0;
+                                    text-align: center;
+                                }
+                            </style>
+                        </head>
+                        <body>
+            //            <div class="footer">
+            //                <a href="https://github.com/bytedance/bytemd">bytemd</a>
+            //            </div>
+                        <script>
+                            const plugins = [bytemdPluginGfm(), bytemdPluginHighlight()];
+                            const editor = new bytemd.Editor({
+                                target: document.body,
+                                props: {
+                                    value: '',
+                                    plugins,
+                                },
+                            });
+                            editor.$on('change', (e) => {
+                                editor.$set({value: e.detail.value});
+                            });
+                            var jsConnector = {
+                                    setMdContent: function (content) {
+                                        editor.$set({value: content})
+                                    }
+                                };
+                            function getJsConnector() {
+                                return jsConnector;
+                            }
+                        </script>
+                        </body>
+                        </html>""";
     @FXML
     public Pane contentPane;
     @FXML
@@ -157,14 +157,14 @@ public class CodeTreeController implements Initializable {
         treeView.setRoot(rootItem);
 
         treeView.setShowRoot(false);
-        treeView.setCellFactory(e -> new ButtonTreeViewCell());
+        treeView.setCellFactory(new ButtonTreeViewCell());
         treeView.getSelectionModel().selectedItemProperty().addListener(e -> {
             CodeProject selectedProject = treeView.getSelectionModel().getSelectedItem().getValue();
             if ("catalog".equals(selectedProject.getProjectType())) {
                 projectNameField.setText(selectedProject.getProjectName());
                 projectDirField.setText(selectedProject.getProjectDir());
                 projectAbstractField.setText(selectedProject.getProjectAbstract());
-            }else {
+            } else {
                 this.initGitProperties(selectedProject);
                 projectNameField.setText(selectedProject.getProjectName());
                 projectDirField.setText(selectedProject.getProjectDir());
