@@ -138,6 +138,8 @@ public class CodeTreeController implements Initializable {
     public Button addCatalog;
     public WebView rightReadmeField;
     public Button openIdeButton;
+    public Button expandTreeButton;
+    public Button packupTreeButton;
     /**
      * 用于与Javascript引擎通信。
      */
@@ -184,12 +186,18 @@ public class CodeTreeController implements Initializable {
                 try {
                     projectReadme = FileUtils.readFileToString(new File(selectedProject.getProjectDir() + "/README.md"), StandardCharsets.UTF_8);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+//                    ex.printStackTrace();
                 }
                 javascriptConnector.call("setMdContent", projectReadme);
 //                System.out.println(treeView.getSelectionModel().getSelectedItem().getValue().getProjectName());
             }
         });
+        expandTreeButton.setGraphic(new ImageView(ImageConstant.expandTreeImage));
+        expandTreeButton.setPadding(Insets.EMPTY);
+        expandTreeButton.setBackground(Background.EMPTY);
+        packupTreeButton.setGraphic(new ImageView(ImageConstant.packupTreeImage));
+        packupTreeButton.setPadding(Insets.EMPTY);
+        packupTreeButton.setBackground(Background.EMPTY);
     }
 
     private void initGitProperties(CodeProject codeProject) {
@@ -263,4 +271,12 @@ public class CodeTreeController implements Initializable {
         }
     }
 
+    public void expandAllTree(MouseEvent mouseEvent) {
+        ProjectContext.expandAllNode(ProjectContext.treeItem);
+    }
+
+    public void packupAllTree(MouseEvent mouseEvent) {
+        ProjectContext.packupAllNode(ProjectContext.treeItem);
+        ProjectContext.treeItem.setExpanded(true);
+    }
 }

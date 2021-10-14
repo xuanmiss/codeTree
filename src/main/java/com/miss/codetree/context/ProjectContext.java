@@ -67,6 +67,24 @@ public class ProjectContext {
         }
     }
 
+    public static void expandAllNode(TreeItem<CodeProject> treeItem) {
+        if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(treeItem.getValue().getProjectType())) {
+            treeItem.setExpanded(true);
+            for (TreeItem<CodeProject> treeItem1 : treeItem.getChildren()) {
+                expandAllNode(treeItem1);
+            }
+        }
+    }
+
+    public static void packupAllNode(TreeItem<CodeProject> treeItem) {
+        if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(treeItem.getValue().getProjectType())) {
+            treeItem.setExpanded(false);
+            for (TreeItem<CodeProject> treeItem1 : treeItem.getChildren()) {
+                packupAllNode(treeItem1);
+            }
+        }
+    }
+
     private static CodeProject initRootProject() {
         CodeProject codeProject = new CodeProject();
         if (f.exists()) {
