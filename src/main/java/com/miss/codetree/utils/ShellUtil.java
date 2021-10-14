@@ -20,7 +20,9 @@ public class ShellUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        String remoteCmd = String.format("cd %s", "/Users/peishengzhang/IdeaProjects/projects/definesys/xdap/motor-spring-boot-starter") + " && " + "git remote -v";
-        runShell(remoteCmd);
+//        String remoteCmd = String.format("cd %s", "/Users/peishengzhang/IdeaProjects/projects/definesys/xdap/motor-spring-boot-starter") + " && " + "git remote -v";
+//        runShell(remoteCmd);
+        String openInIde = String.format("cd %s", "/Users/peishengzhang/IdeaProjects/projects/definesys/xdap/motor-spring-boot-starter" + " && " + "idea ." );
+        runShell(openInIde);
     }
 }

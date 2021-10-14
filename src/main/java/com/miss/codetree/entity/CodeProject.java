@@ -103,6 +103,9 @@ public class CodeProject implements Serializable {
     }
 
     public LinkedList<CodeProject> getSubProjectList() {
+        if (subProjectList == null) {
+            subProjectList = new LinkedList<>();
+        }
         return subProjectList;
     }
 

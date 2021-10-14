@@ -27,4 +27,8 @@ public class ImageConstant {
     public static final Image expandImage = new Image(CodeTreeApplication.class.getResourceAsStream("/icon/expandImage.png"));
 
     public static final Image projectImage = new Image(CodeTreeApplication.class.getResourceAsStream("/icon/project.png"));
+
+    public static final Image openDirImage = new Image(CodeTreeApplication.class.getResourceAsStream("/icon/opendirImage.png"));
+
+    public static final Image presOpenDirImage = new Image(CodeTreeApplication.class.getResourceAsStream("/icon/presOpenDirImage.png"));
 }

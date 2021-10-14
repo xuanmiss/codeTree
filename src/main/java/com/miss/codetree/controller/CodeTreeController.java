@@ -2,19 +2,27 @@ package com.miss.codetree.controller;
 
 import com.miss.codetree.CodeTreeApplication;
 import com.miss.codetree.component.ButtonTreeViewCell;
+import com.miss.codetree.constant.CodeProjectConstant;
+import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.entity.CodeProject;
 import com.miss.codetree.utils.ShellUtil;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import netscape.javascript.JSObject;
 import org.apache.commons.io.FileUtils;
 
@@ -129,6 +137,7 @@ public class CodeTreeController implements Initializable {
     public Button deleteButton;
     public Button addCatalog;
     public WebView rightReadmeField;
+    public Button openIdeButton;
     /**
      * 用于与Javascript引擎通信。
      */
@@ -160,7 +169,7 @@ public class CodeTreeController implements Initializable {
         treeView.setCellFactory(new ButtonTreeViewCell());
         treeView.getSelectionModel().selectedItemProperty().addListener(e -> {
             CodeProject selectedProject = treeView.getSelectionModel().getSelectedItem().getValue();
-            if ("catalog".equals(selectedProject.getProjectType())) {
+            if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
                 projectNameField.setText(selectedProject.getProjectName());
                 projectDirField.setText(selectedProject.getProjectDir());
                 projectAbstractField.setText(selectedProject.getProjectAbstract());
@@ -178,7 +187,7 @@ public class CodeTreeController implements Initializable {
                     ex.printStackTrace();
                 }
                 javascriptConnector.call("setMdContent", projectReadme);
-                System.out.println(treeView.getSelectionModel().getSelectedItem().getValue().getProjectName());
+//                System.out.println(treeView.getSelectionModel().getSelectedItem().getValue().getProjectName());
             }
         });
     }
@@ -190,7 +199,7 @@ public class CodeTreeController implements Initializable {
             String branch = ShellUtil.runShell(branchCmd);
             codeProject.setProjectBranch(branch);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         String remoteCmd = String.format("cd %s", dir) + " && " + "git remote -v";
@@ -199,7 +208,7 @@ public class CodeTreeController implements Initializable {
             String remote = (res.split("\t")[1]).split("\\(")[0].trim();
             codeProject.setProjectRemote(remote);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
     }
@@ -239,4 +248,19 @@ public class CodeTreeController implements Initializable {
         ButtonTreeViewCell.openProjectAddModal(ProjectContext.treeItem);
 
     }
+
+    public void openProjectInIDE(MouseEvent mouseEvent) {
+        TreeItem<CodeProject> treeItem = treeView.getSelectionModel().getSelectedItem();
+        CodeProject codeProject = treeItem.getValue();
+        if (CodeProjectConstant.PROJECT_TYPE_PROJECT.equals(codeProject.getProjectType())) {
+            String dir = codeProject.getProjectDir();
+            String openIdIdeCmd = String.format("cd %s", dir) + " && " + "idea .";
+            try {
+                ShellUtil.runShell(openIdIdeCmd);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
