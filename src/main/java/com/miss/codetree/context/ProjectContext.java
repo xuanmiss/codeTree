@@ -2,6 +2,7 @@ package com.miss.codetree.context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miss.codetree.CodeTreeApplication;
+import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.entity.CodeProject;
 import javafx.scene.Node;
@@ -54,7 +55,7 @@ public class ProjectContext {
         if (codeProjects != null && !codeProjects.isEmpty()) {
             for (CodeProject project : codeProjects) {
                 TreeItem<CodeProject> item = new TreeItem<>(project);
-                if ("catalog".equalsIgnoreCase(project.getProjectType())) {
+                if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(project.getProjectType())) {
                     Node imageIcon = new ImageView(ImageConstant.addImage);
                     item.setGraphic(imageIcon);
                 }

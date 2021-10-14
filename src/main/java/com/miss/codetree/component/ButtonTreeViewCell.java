@@ -1,6 +1,7 @@
 package com.miss.codetree.component;
 
 import com.miss.codetree.CodeTreeApplication;
+import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.controller.ProjectModalController;
@@ -60,7 +61,7 @@ public class ButtonTreeViewCell implements Callback<TreeView<CodeProject>, TreeC
                 } else {
                     // We only show the custom cell if it is a leaf, meaning it has
                     // no children.
-                    if ("catalog".equalsIgnoreCase(item.getProjectType())) {
+                    if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(item.getProjectType())) {
 
                         // A custom HBox that will contain your check box, label and
                         // button.
@@ -169,10 +170,11 @@ public class ButtonTreeViewCell implements Callback<TreeView<CodeProject>, TreeC
             thisItem.getValue().getSubProjectList().add(0, draggedItem.getValue());
             treeView.getSelectionModel().select(draggedItem);
         } else {
-            if ("catalog".equals(thisItem.getValue().getProjectType())) {
+            if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(thisItem.getValue().getProjectType())) {
                 // 如果拖入了文件夹，则更换parent
                 thisItem.getChildren().add(0, draggedItem);
                 draggedItem.getValue().setParentProjectCode(thisItem.getValue().getProjectCode());
+
                 thisItem.getValue().getSubProjectList().add(0, draggedItem.getValue());
             } else {
                 // add to new location

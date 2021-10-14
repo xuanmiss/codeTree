@@ -1,5 +1,6 @@
 package com.miss.codetree.controller;
 
+import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.entity.CodeProject;
 import javafx.collections.FXCollections;
@@ -37,7 +38,7 @@ public class ProjectModalController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        projectTypeChoice.setItems(FXCollections.observableList(Arrays.asList("catalog", "project")));
+        projectTypeChoice.setItems(FXCollections.observableList(Arrays.asList(CodeProjectConstant.PROJECT_TYPE_CATALOG, CodeProjectConstant.PROJECT_TYPE_PROJECT)));
     }
 
 
