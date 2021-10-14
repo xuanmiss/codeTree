@@ -13,13 +13,13 @@
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.miss.codetree.controller.CodeTreeController">
     <AnchorPane fx:id="contentPane" VBox.vgrow="ALWAYS">
         <SplitPane fx:id="contentSplitPane" dividerPositions="0.25" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <AnchorPane fx:id="treePane" minHeight="0.0" minWidth="150" maxWidth="300">
+            <AnchorPane fx:id="treePane" maxWidth="300" minHeight="0.0" minWidth="150">
                 <TreeView fx:id="treeView" prefHeight="566.0" prefWidth="221.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0" />
-            <Button fx:id="addCatalog" layoutX="33.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#addProjectCatalog" text="新增目录" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Button fx:id="addCatalog" layoutX="33.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#addProjectCatalog" style="-fx-background-color: #2196f3;" text="新增目录" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </AnchorPane>
             <AnchorPane fx:id="rightContentPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="750.0">
                 <SplitPane fx:id="rightSplitPane" dividerPositions="0.4" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <AnchorPane fx:id="rightPropertiesPane" minHeight="0.0" minWidth="0.0" maxHeight="350.0">
+                    <AnchorPane fx:id="rightPropertiesPane" maxHeight="350.0" minHeight="0.0" minWidth="0.0">
                         <Label fx:id="projectDirLabel" layoutX="14.0" layoutY="64.0" text="目录:" />
                         <TextField fx:id="projectDirField" layoutX="44.0" layoutY="60.0" prefHeight="26.0" prefWidth="495.0" promptText="项目目录" />
                         <Label fx:id="projectBranchLabel" layoutX="334.0" layoutY="18.0" text="分支:" />
@@ -28,10 +28,11 @@
                         <TextField fx:id="projectRemoteField" editable="false" layoutX="99.0" layoutY="98.0" prefHeight="26.0" prefWidth="439.0" />
                         <Label fx:id="projectAbstractLabel" layoutX="14.0" layoutY="140.0" text="简介:" />
                         <TextArea fx:id="projectAbstractField" layoutX="45.0" layoutY="140.0" prefHeight="81.0" prefWidth="495.0" />
-                        <Button layoutX="538.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#saveCodeProject" text="保存" />
+                        <Button layoutX="538.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#saveCodeProject" style="-fx-background-color: #2196f3;" text="保存" />
                         <Label fx:id="projectNameLabel" layoutX="15.0" layoutY="18.0" text="项目名称:" />
                         <TextField fx:id="projectNameField" layoutX="72.0" layoutY="14.0" promptText="项目名称" />
-                        <Button fx:id="deleteButton" cancelButton="true" layoutX="599.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#deleteProject" text="删除" />
+                        <Button fx:id="deleteButton" cancelButton="true" layoutX="599.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#deleteProject" style="-fx-background-color: #f87934;" text="删除" />
+<!--                        <Button fx:id="openIdeButton" layoutX="592.0" layoutY="71.0" mnemonicParsing="false" onMouseClicked="#openProjectInIDE" style="-fx-background-color: #2196f3;" text="IDE打开" />-->
                     </AnchorPane>
                     <AnchorPane fx:id="rightReadmePane" minHeight="0.0" minWidth="0.0">
                         <WebView fx:id="rightReadmeField" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
