@@ -170,6 +170,9 @@ public class CodeTreeController implements Initializable {
         treeView.setShowRoot(false);
         treeView.setCellFactory(new ButtonTreeViewCell());
         treeView.getSelectionModel().selectedItemProperty().addListener(e -> {
+            if (Objects.isNull(treeView.getSelectionModel().getSelectedItem())) {
+                return;
+            }
             CodeProject selectedProject = treeView.getSelectionModel().getSelectedItem().getValue();
             if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
                 projectNameField.setText(selectedProject.getProjectName());
