@@ -84,9 +84,9 @@ public class ProjectModalController implements Initializable {
         try {
             Node source = (Node) mouseEvent.getSource();
             Window window = source.getScene().getWindow();
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setInitialDirectory(new File(System.getProperties().getProperty("user.home")));
-            File selectedDirectory = directoryChooser.showDialog(window);
+
+            ProjectContext.directoryChooser.setInitialDirectory(new File(ProjectContext.dirChooseBaseDir));
+            File selectedDirectory = ProjectContext.directoryChooser.showDialog(window);
 //            System.out.println(selectedDirectory.getAbsolutePath());
             String dirPath = selectedDirectory.getAbsolutePath();
             String projectName = selectedDirectory.getName();
@@ -94,6 +94,7 @@ public class ProjectModalController implements Initializable {
             projectNameField.setText(projectName);
             projectDirField.setText(dirPath);
             projectTypeChoice.setValue(projectType);
+            ProjectContext.dirChooseBaseDir = selectedDirectory.getParent();
         } catch (Exception e) {
 
         }

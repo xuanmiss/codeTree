@@ -8,6 +8,7 @@ import com.miss.codetree.entity.CodeProject;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,6 +41,10 @@ public class ProjectContext {
 
 
     public static TreeItem<CodeProject> treeItem = initTreeRootItem();
+
+    public static String dirChooseBaseDir = System.getProperties().getProperty("user.home");
+
+    public static DirectoryChooser directoryChooser = new DirectoryChooser();
 
 
 
