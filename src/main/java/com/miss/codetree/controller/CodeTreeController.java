@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -140,22 +141,34 @@ public class CodeTreeController implements Initializable {
     public Button openIdeButton;
     public Button expandTreeButton;
     public Button packupTreeButton;
+    public Button editOrViewReadmeButton;
     /**
      * 用于与Javascript引擎通信。
      */
     private JSObject javascriptConnector;
 
+    private static final String editorUrl = Objects.requireNonNull(CodeTreeApplication.class.getResource("/static/editor.html")).toExternalForm();
+    private static final String viewUrl = Objects.requireNonNull(CodeTreeApplication.class.getResource("/static/viewer.html")).toExternalForm();
+
+    private WebEngine webEngine;
+
+    private boolean editFlag;
+
+    private String readmeText = "";
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        WebEngine webEngine = rightReadmeField.getEngine();
-        String htmlUrl = Objects.requireNonNull(CodeTreeApplication.class.getResource("/static/index.html")).toExternalForm();
-        webEngine.load(htmlUrl);
+        webEngine = rightReadmeField.getEngine();
+
+        webEngine.load(viewUrl);
+        editFlag = false;
 //        webEngine.loadContent(mdHtmlContent);
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (Worker.State.SUCCEEDED == newValue) {
 //                JSObject window = (JSObject) webEngine.executeScript("window");
                 javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
+                javascriptConnector.call("setMdContent", readmeText);
 //
 //                javascriptConnector.call("setMdContent", "# this is a title~~~");
             }
@@ -191,7 +204,8 @@ public class CodeTreeController implements Initializable {
                 } catch (IOException ex) {
 //                    ex.printStackTrace();
                 }
-                javascriptConnector.call("setMdContent", projectReadme);
+                readmeText = projectReadme;
+                javascriptConnector.call("setMdContent", readmeText);
 //                System.out.println(treeView.getSelectionModel().getSelectedItem().getValue().getProjectName());
             }
         });
@@ -224,13 +238,15 @@ public class CodeTreeController implements Initializable {
 
     }
 
-    public void saveCodeProject() {
+    public void saveCodeProject() throws IOException {
         TreeItem<CodeProject> treeItem = treeView.getSelectionModel().getSelectedItem();
         CodeProject codeProject = treeItem.getValue();
         codeProject.setProjectName(projectNameField.getText());
         codeProject.setProjectDir(projectDirField.getText());
         codeProject.setProjectAbstract(projectAbstractField.getText());
         treeItem.setValue(codeProject);
+        String text = (String) javascriptConnector.call("getMdContent","");
+        FileUtils.writeStringToFile(new File(codeProject.getProjectDir() + "/README.md"), text, StandardCharsets.UTF_8);
         ProjectContext.updateItem(codeProject);
     }
 
@@ -281,5 +297,22 @@ public class CodeTreeController implements Initializable {
     public void packupAllTree(MouseEvent mouseEvent) {
         ProjectContext.packupAllNode(ProjectContext.treeItem);
         ProjectContext.treeItem.setExpanded(true);
+    }
+
+    public void editOrViewReadme(MouseEvent mouseEvent) {
+
+        if (!editFlag) {
+            editOrViewReadmeButton.setText("查看");
+            editOrViewReadmeButton.setStyle("-fx-background-color: #13911b;");
+            webEngine.load(editorUrl);
+            editFlag = true;
+
+        }else {
+            editOrViewReadmeButton.setText("编辑");
+            editOrViewReadmeButton.setStyle("-fx-background-color: #2196f3;");
+            webEngine.load(viewUrl);
+            editFlag = false;
+
+        }
     }
 }

@@ -17,12 +17,9 @@
             <AnchorPane fx:id="treePane" maxWidth="300" minHeight="0.0" minWidth="150">
                 <TreeView fx:id="treeView" prefHeight="566.0" prefWidth="221.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0" />
                 <HBox prefHeight="30.0" prefWidth="222.0">
-                    <Button fx:id="addCatalog" mnemonicParsing="false" onMouseClicked="#addProjectCatalog"
-                            prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #2196f3;" text="新增目录"/>
-                    <Button fx:id="expandTreeButton" mnemonicParsing="false" onMouseClicked="#expandAllTree"
-                            prefHeight="30.0" prefWidth="50.0"/>
-                    <Button fx:id="packupTreeButton" mnemonicParsing="false" onMouseClicked="#packupAllTree"
-                            prefHeight="30.0" prefWidth="50.0"/>
+                    <Button fx:id="addCatalog" mnemonicParsing="false" onMouseClicked="#addProjectCatalog" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #2196f3;" text="新增目录" />
+                    <Button fx:id="expandTreeButton" mnemonicParsing="false" onMouseClicked="#expandAllTree" prefHeight="30.0" prefWidth="50.0" />
+                    <Button fx:id="packupTreeButton" mnemonicParsing="false" onMouseClicked="#packupAllTree" prefHeight="30.0" prefWidth="50.0" />
                 </HBox>
             </AnchorPane>
             <AnchorPane fx:id="rightContentPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="750.0">
@@ -41,6 +38,7 @@
                         <TextField fx:id="projectNameField" layoutX="72.0" layoutY="14.0" promptText="项目名称" />
                         <Button fx:id="deleteButton" cancelButton="true" layoutX="599.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#deleteProject" style="-fx-background-color: #f87934;" text="删除" />
                         <Button fx:id="openIdeButton" layoutX="592.0" layoutY="71.0" mnemonicParsing="false" onMouseClicked="#openProjectInIDE" style="-fx-background-color: #2196f3;" text="IDE打开" />
+                        <Button fx:id="editOrViewReadmeButton" layoutX="592.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#editOrViewReadme" style="-fx-background-color: #2196f3;" text="编辑" />
                     </AnchorPane>
                     <AnchorPane fx:id="rightReadmePane" minHeight="0.0" minWidth="0.0">
                         <WebView fx:id="rightReadmeField" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
