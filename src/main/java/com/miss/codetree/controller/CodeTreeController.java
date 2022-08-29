@@ -246,6 +246,8 @@ public class CodeTreeController implements Initializable {
         codeProject.setProjectAbstract(projectAbstractField.getText());
         treeItem.setValue(codeProject);
         String text = (String) javascriptConnector.call("getMdContent","");
+        // bugfix: 修复编辑README之后，保存之后，不会刷新
+        readmeText = text;
         FileUtils.writeStringToFile(new File(codeProject.getProjectDir() + "/README.md"), text, StandardCharsets.UTF_8);
         ProjectContext.updateItem(codeProject);
     }
