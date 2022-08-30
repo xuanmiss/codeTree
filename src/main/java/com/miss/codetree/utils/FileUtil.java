@@ -46,4 +46,5 @@ public class FileUtil {
     private static boolean isGitDir(File f) {
         return f.isDirectory() && Arrays.asList(f.list()).contains(".git");
     }
+
 }
