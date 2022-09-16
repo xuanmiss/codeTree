@@ -31,9 +31,8 @@ public class FileUtil {
     private static void findSubDir(File rootDir, LinkedList<File> dirList) {
         File[] files = rootDir.listFiles();
         for(int i = 0; i < files.length; i++ ) {
-            File f = files[i];
-            if (isGitDir(f)) {
-                dirList.add(f);
+            if (isGitDir(files[i])) {
+                dirList.add(files[i]);
                 continue;
             }
             if (files[i].isDirectory()) {
