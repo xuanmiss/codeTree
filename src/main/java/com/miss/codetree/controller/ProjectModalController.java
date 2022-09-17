@@ -4,6 +4,9 @@ import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.entity.CodeProject;
+import com.miss.codetree.utils.ProjectUtil;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.stage.DirectoryChooser;
@@ -20,6 +24,7 @@ import javafx.stage.Window;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -42,12 +47,25 @@ public class ProjectModalController implements Initializable {
     public Button cancelButton;
     public ChoiceBox<String> projectTypeChoice;
     public Button dirChooseButton;
+    public CheckBox dirSubProjectChoose;
 
     private TreeItem<CodeProject> parentCodeProjectItem;
 
+    private final List<String> projectTypeChooseList = List.of(new String[]{CodeProjectConstant.PROJECT_TYPE_CATALOG, CodeProjectConstant.PROJECT_TYPE_PROJECT});
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        projectTypeChoice.setItems(FXCollections.observableList(Arrays.asList(CodeProjectConstant.PROJECT_TYPE_CATALOG, CodeProjectConstant.PROJECT_TYPE_PROJECT)));
+        projectTypeChoice.setItems(FXCollections.observableList(projectTypeChooseList));
+        projectTypeChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(projectTypeChooseList.get(t1.intValue()))) {
+                    dirSubProjectChoose.setVisible(true);
+                }else {
+                    dirSubProjectChoose.setVisible(false);
+                }
+            }
+        });
         dirChooseButton.setGraphic(new ImageView(ImageConstant.openDirImage));
         dirChooseButton.setPadding(Insets.EMPTY);
         dirChooseButton.setBackground(Background.EMPTY);
@@ -63,7 +81,11 @@ public class ProjectModalController implements Initializable {
         codeProject.setProjectDir(projectDirField.getText());
         codeProject.setProjectAbstract(projectAbstractField.getText());
         codeProject.setProjectType(projectTypeChoice.getValue());
-        parentCodeProjectItem.getChildren().add(new TreeItem<>(codeProject));
+        TreeItem currentItem = new TreeItem(codeProject);
+        parentCodeProjectItem.getChildren().add(currentItem);
+        if(dirSubProjectChoose.isSelected()) {
+            ProjectUtil.generateInTreeProject(currentItem);
+        }
         ProjectContext.refreshProjects(codeProject);
         Stage stage = (Stage) addProjectButton.getScene().getWindow();
         stage.close();
