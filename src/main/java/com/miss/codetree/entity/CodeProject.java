@@ -135,6 +135,8 @@ public class CodeProject implements Serializable {
     public CodeProject() {
     }
 
+
+
     public CodeProject(String projectCode, String projectName, String projectDir, String projectType, LinkedList<CodeProject> subProjectList) {
         this.projectCode = projectCode;
         this.projectName = projectName;
@@ -145,7 +147,7 @@ public class CodeProject implements Serializable {
 
     @Override
     public String toString() {
-        return projectName;
+        return this.projectName;
     }
 
     @Override

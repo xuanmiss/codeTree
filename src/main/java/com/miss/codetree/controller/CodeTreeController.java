@@ -7,6 +7,8 @@ import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.entity.CodeProject;
 import com.miss.codetree.utils.ShellUtil;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -30,10 +33,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static javafx.scene.input.KeyCode.ENTER;
 
 
 /**
@@ -142,6 +149,8 @@ public class CodeTreeController implements Initializable {
     public Button expandTreeButton;
     public Button packupTreeButton;
     public Button editOrViewReadmeButton;
+    public TextField searchField;
+    public ListView<CodeProject> searchListView;
     /**
      * 用于与Javascript引擎通信。
      */
@@ -156,11 +165,20 @@ public class CodeTreeController implements Initializable {
 
     private String readmeText = "";
 
+    private boolean onSearch = false;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        webEngine = rightReadmeField.getEngine();
+        initMDPane();
+        initCodeProjectTreeView();
+        initFuncButton();
+        initSearchListView();
+    }
 
+    private void initMDPane() {
+        webEngine = rightReadmeField.getEngine();
+//        searchField.prefWidthProperty().bind(treePane.prefWidthProperty());
         webEngine.load(viewUrl);
         editFlag = false;
 //        webEngine.loadContent(mdHtmlContent);
@@ -173,8 +191,18 @@ public class CodeTreeController implements Initializable {
 //                javascriptConnector.call("setMdContent", "# this is a title~~~");
             }
         });
+    }
 
+    private void initFuncButton() {
+        expandTreeButton.setGraphic(new ImageView(ImageConstant.expandTreeImage));
+        expandTreeButton.setPadding(Insets.EMPTY);
+        expandTreeButton.setBackground(Background.EMPTY);
+        packupTreeButton.setGraphic(new ImageView(ImageConstant.packupTreeImage));
+        packupTreeButton.setPadding(Insets.EMPTY);
+        packupTreeButton.setBackground(Background.EMPTY);
+    }
 
+    private void initCodeProjectTreeView() {
         TreeItem<CodeProject> rootItem = ProjectContext.treeItem;
         rootItem.setExpanded((true));
         treeView.setBackground(Background.EMPTY);
@@ -187,34 +215,33 @@ public class CodeTreeController implements Initializable {
                 return;
             }
             CodeProject selectedProject = treeView.getSelectionModel().getSelectedItem().getValue();
-            if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
-                projectNameField.setText(selectedProject.getProjectName());
-                projectDirField.setText(selectedProject.getProjectDir());
-                projectAbstractField.setText(selectedProject.getProjectAbstract());
-            } else {
-                this.initGitProperties(selectedProject);
-                projectNameField.setText(selectedProject.getProjectName());
-                projectDirField.setText(selectedProject.getProjectDir());
-                projectBranchField.setText(selectedProject.getProjectBranch());
-                projectRemoteField.setText(selectedProject.getProjectRemote());
-                projectAbstractField.setText(selectedProject.getProjectAbstract());
-                String projectReadme = "";
-                try {
-                    projectReadme = FileUtils.readFileToString(new File(selectedProject.getProjectDir() + "/README.md"), StandardCharsets.UTF_8);
-                } catch (IOException ex) {
-//                    ex.printStackTrace();
-                }
-                readmeText = projectReadme;
-                javascriptConnector.call("setMdContent", readmeText);
-//                System.out.println(treeView.getSelectionModel().getSelectedItem().getValue().getProjectName());
-            }
+            itemSelectedListener(selectedProject);
         });
-        expandTreeButton.setGraphic(new ImageView(ImageConstant.expandTreeImage));
-        expandTreeButton.setPadding(Insets.EMPTY);
-        expandTreeButton.setBackground(Background.EMPTY);
-        packupTreeButton.setGraphic(new ImageView(ImageConstant.packupTreeImage));
-        packupTreeButton.setPadding(Insets.EMPTY);
-        packupTreeButton.setBackground(Background.EMPTY);
+    }
+
+    private void itemSelectedListener(CodeProject selectedProject) {
+
+        if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
+            projectNameField.setText(selectedProject.getProjectName());
+            projectDirField.setText(selectedProject.getProjectDir());
+            projectAbstractField.setText(selectedProject.getProjectAbstract());
+        } else {
+            this.initGitProperties(selectedProject);
+            projectNameField.setText(selectedProject.getProjectName());
+            projectDirField.setText(selectedProject.getProjectDir());
+            projectBranchField.setText(selectedProject.getProjectBranch());
+            projectRemoteField.setText(selectedProject.getProjectRemote());
+            projectAbstractField.setText(selectedProject.getProjectAbstract());
+            String projectReadme = "";
+            try {
+                projectReadme = FileUtils.readFileToString(new File(selectedProject.getProjectDir() + "/README.md"), StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+//                    ex.printStackTrace();
+            }
+            readmeText = projectReadme;
+            javascriptConnector.call("setMdContent", readmeText);
+//                System.out.println(treeView.getSelectionModel().getSelectedItem().getValue().getProjectName());
+        }
     }
 
     private void initGitProperties(CodeProject codeProject) {
@@ -246,6 +273,7 @@ public class CodeTreeController implements Initializable {
         codeProject.setProjectAbstract(projectAbstractField.getText());
         treeItem.setValue(codeProject);
         String text = (String) javascriptConnector.call("getMdContent","");
+        // bugfix: 修复编辑README之后，保存之后，不会刷新
         readmeText = text;
         FileUtils.writeStringToFile(new File(codeProject.getProjectDir() + "/README.md"), text, StandardCharsets.UTF_8);
         ProjectContext.updateItem(codeProject);
@@ -315,5 +343,31 @@ public class CodeTreeController implements Initializable {
             editFlag = false;
 
         }
+    }
+
+    public void searchProject(KeyEvent keyEvent) {
+        if (ENTER.equals(keyEvent.getCode())) {
+            treeView.setVisible(false);
+            searchListView.setItems(searchListView.getItems().filtered(codeProject -> codeProject.getProjectName().contains(searchField.getText())));
+            searchListView.setVisible(true);
+        }else {
+            if (searchField.getText() == null || searchField.getText().isEmpty()) {
+                searchListView.setItems(FXCollections.observableArrayList (ProjectContext.projectList).filtered(codeProject -> codeProject.getProjectType().equals(CodeProjectConstant.PROJECT_TYPE_PROJECT)));
+                searchListView.setVisible(false);
+                treeView.setVisible(true);
+            }
+        }
+    }
+
+    private void initSearchListView() {
+        ObservableList<CodeProject> items = FXCollections.observableArrayList (ProjectContext.projectList).filtered(codeProject -> codeProject.getProjectType().equals(CodeProjectConstant.PROJECT_TYPE_PROJECT));
+        searchListView.setItems(items);
+        searchListView.getSelectionModel().selectedItemProperty().addListener(e -> {
+            if (Objects.isNull(searchListView.getSelectionModel().getSelectedItem())) {
+                return;
+            }
+            CodeProject selectedProject = searchListView.getSelectionModel().getSelectedItem();
+            itemSelectedListener(selectedProject);
+        });
     }
 }

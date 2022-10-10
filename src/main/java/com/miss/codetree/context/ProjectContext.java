@@ -102,6 +102,9 @@ public class ProjectContext {
         }else {
             try {
                 f.createNewFile();
+                codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_CATALOG);
+                codeProject.setProjectName("root");
+                codeProject.setProjectCode(UUID.randomUUID().toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
