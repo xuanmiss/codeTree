@@ -33,18 +33,29 @@ public class CodeProject implements Serializable {
 
     private String projectDir;
 
+    // 项目描述
     private String projectAbstract;
 
+    // 项目分支
     private String projectBranch;
 
+    // 项目远程仓库地址
     private String projectRemote;
 
     // project|catalog
     private String projectType;
 
+    // 子项目列表，仅catalog有此值
     private LinkedList<CodeProject> subProjectList;
 
+    // 父项目编码
     private String parentProjectCode;
+
+    // 展开状态
+    private boolean expandStatus;
+
+    // 选中状态
+    private boolean selectedStatus;
 
     public String getProjectCode() {
         return projectCode;
