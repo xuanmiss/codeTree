@@ -33,20 +33,35 @@ public class ProjectContext {
 
     private static final File f = new File(userHome + File.separator + ".codeTreeConfig.json");
 
-    public static CodeProject rootCodeProject = initRootProject();
+    public static CodeProject rootCodeProject;
+//    = initRootProject();
 
-    public static List<CodeProject> projectList = initProjectList();
+    public static List<CodeProject> projectList;
+//    = initProjectList();
 
-    public static Map<String, CodeProject> projectMap = initProjectMap();
+    public static Map<String, CodeProject> projectMap;
+//    = initProjectMap();
 
 
-    public static TreeItem<CodeProject> treeItem = initTreeRootItem();
+    public static TreeItem<CodeProject> treeItem;
+//    = initTreeRootItem();
 
     public static String dirChooseBaseDir = System.getProperties().getProperty("user.home");
 
     public static DirectoryChooser directoryChooser = new DirectoryChooser();
 
+    static {
+        initProjectContext();
 
+
+    }
+
+    private static void initProjectContext() {
+        rootCodeProject = initRootProject();
+        projectList = initProjectList();
+        projectMap = initProjectMap();
+        treeItem = initTreeRootItem();
+    }
 
     private static TreeItem<CodeProject> initTreeRootItem() {
         Node imageIcon = new ImageView(ImageConstant.addImage);
@@ -92,11 +107,14 @@ public class ProjectContext {
 
     private static CodeProject initRootProject() {
         CodeProject codeProject = new CodeProject();
-        if (f.exists()) {
+        if (f.exists() && f.length() > 0) {
             try {
                 codeProject = objectMapper.readValue(f, CodeProject.class);
             } catch (IOException e) {
                 e.printStackTrace();
+                codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_CATALOG);
+                codeProject.setProjectName("root");
+                codeProject.setProjectCode(UUID.randomUUID().toString());
             }
             return codeProject;
         }else {
@@ -219,5 +237,11 @@ public class ProjectContext {
                 deleteFromRootCodeProject(subProjectList, codeProject);
             }
         }
+    }
+
+    public static void clearCodeProject() {
+        f.delete();
+        initProjectContext();
+
     }
 }

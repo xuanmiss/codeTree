@@ -10,12 +10,13 @@
             <AnchorPane fx:id="treePane" maxWidth="300" minHeight="0.0" minWidth="150">
                 <TreeView fx:id="treeView" layoutY="60.0" prefHeight="537.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
                 <HBox prefHeight="30.0" prefWidth="222.0">
-                    <Button fx:id="addCatalog" mnemonicParsing="false" onMouseClicked="#addProjectCatalog" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #2196f3;" text="新增目录" />
+                    <Button fx:id="addCatalog" mnemonicParsing="false" onMouseClicked="#addProjectCatalog" prefHeight="30.0" prefWidth="113.0" style="-fx-background-color: #2196f3;" text="新增目录" />
+                    <Button fx:id= "clearTreeButton" mnemonicParsing="false" onMouseClicked="#clearTree" prefHeight="30.0" prefWidth="50.0" />
                     <Button fx:id="expandTreeButton" mnemonicParsing="false" onMouseClicked="#expandAllTree" prefHeight="30.0" prefWidth="50.0" />
                     <Button fx:id="packupTreeButton" mnemonicParsing="false" onMouseClicked="#packupAllTree" prefHeight="30.0" prefWidth="50.0" />
                 </HBox>
             <TextField fx:id="searchField" layoutY="30.0" onKeyReleased="#searchProject" prefHeight="30.0" prefWidth="222.0" />
-            <ListView fx:id="searchListView" layoutY="60.0" prefHeight="537.0" prefWidth="222.0" visible = "false"/>
+            <ListView fx:id="searchListView" layoutY="60.0" prefHeight="537.0" prefWidth="222.0" visible="false" />
             </AnchorPane>
             <AnchorPane fx:id="rightContentPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="750.0">
                 <SplitPane fx:id="rightSplitPane" dividerPositions="0.4" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

@@ -29,6 +29,9 @@ public class ProjectUtil {
     private static void findSubDir(File rootDir, TreeItem<CodeProject> parentProject) {
         File[] files = rootDir.listFiles();
         for(int i = 0; i < files.length; i++ ) {
+            if (!files[i].isDirectory() || files[i].getName().startsWith(".")) {
+                continue;
+            }
             CodeProject codeProject = new CodeProject();
             codeProject.setParentProjectCode(parentProject.getValue().getProjectCode());
             codeProject.setProjectName(files[i].getName());

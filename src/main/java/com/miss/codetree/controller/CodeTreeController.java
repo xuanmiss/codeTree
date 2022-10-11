@@ -151,6 +151,7 @@ public class CodeTreeController implements Initializable {
     public Button editOrViewReadmeButton;
     public TextField searchField;
     public ListView<CodeProject> searchListView;
+    public Button clearTreeButton;
     /**
      * 用于与Javascript引擎通信。
      */
@@ -200,6 +201,9 @@ public class CodeTreeController implements Initializable {
         packupTreeButton.setGraphic(new ImageView(ImageConstant.packupTreeImage));
         packupTreeButton.setPadding(Insets.EMPTY);
         packupTreeButton.setBackground(Background.EMPTY);
+        clearTreeButton.setGraphic(new ImageView(ImageConstant.clearTreeImage));
+        clearTreeButton.setPadding(Insets.EMPTY);
+        clearTreeButton.setBackground(Background.EMPTY);
     }
 
     private void initCodeProjectTreeView() {
@@ -369,5 +373,10 @@ public class CodeTreeController implements Initializable {
             CodeProject selectedProject = searchListView.getSelectionModel().getSelectedItem();
             itemSelectedListener(selectedProject);
         });
+    }
+
+    public void clearTree(MouseEvent mouseEvent) {
+        ProjectContext.clearCodeProject();
+        initCodeProjectTreeView();
     }
 }
