@@ -35,4 +35,6 @@ public class ImageConstant {
     public static final Image expandTreeImage = new Image(CodeTreeApplication.class.getResourceAsStream("/icon/expandTree.png"));
 
     public static final Image packupTreeImage = new Image(CodeTreeApplication.class.getResourceAsStream("/icon/packupTree.png"));
+
+    public static final Image clearTreeImage = new Image(CodeTreeApplication.class.getResourceAsStream("/icon/clear.png"));
 }
