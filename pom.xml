@@ -71,16 +71,6 @@
             <version>${javafx.version}</version>
         </dependency>
 
-
-
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.graalvm.js/js-scriptengine &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.graalvm.js</groupId>-->
-<!--            <artifactId>js-scriptengine</artifactId>-->
-<!--            <version>21.2.0</version>-->
-<!--        </dependency>-->
-
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
