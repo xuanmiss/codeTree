@@ -229,6 +229,9 @@ public class CodeTreeController implements Initializable {
             projectNameField.setText(selectedProject.getProjectName());
             projectDirField.setText(selectedProject.getProjectDir());
             projectAbstractField.setText(selectedProject.getProjectAbstract());
+            projectRemoteField.setText(selectedProject.getProjectRemote());
+            projectBranchField.setText(selectedProject.getProjectBranch());
+            javascriptConnector.call("setMdContent", "");
         } else {
             this.initGitProperties(selectedProject);
             projectNameField.setText(selectedProject.getProjectName());
