@@ -2,6 +2,7 @@ package com.miss.codetree.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miss.codetree.constant.CodeProjectConstant;
+import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.entity.CodeProject;
 import javafx.scene.control.TreeItem;
 
@@ -41,6 +42,7 @@ public class ProjectUtil {
             TreeItem<CodeProject> treeItem = new TreeItem<>(codeProject);
             if (isGitDir(files[i])) {
                 codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_PROJECT);
+                ProjectContext.projectList.add(codeProject);
                 parentProject.getValue().getSubProjectList().add(codeProject);
                 parentProject.getChildren().add(treeItem);
 //                dirList.add(files[i]);
