@@ -179,17 +179,12 @@ public class CodeTreeController implements Initializable {
 
     private void initMDPane() {
         webEngine = rightReadmeField.getEngine();
-//        searchField.prefWidthProperty().bind(treePane.prefWidthProperty());
         webEngine.load(viewUrl);
         editFlag = false;
-//        webEngine.loadContent(mdHtmlContent);
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (Worker.State.SUCCEEDED == newValue) {
-//                JSObject window = (JSObject) webEngine.executeScript("window");
                 javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
                 javascriptConnector.call("setMdContent", readmeText);
-//
-//                javascriptConnector.call("setMdContent", "# this is a title~~~");
             }
         });
     }
@@ -231,7 +226,8 @@ public class CodeTreeController implements Initializable {
             projectAbstractField.setText(selectedProject.getProjectAbstract());
             projectRemoteField.setText(selectedProject.getProjectRemote());
             projectBranchField.setText(selectedProject.getProjectBranch());
-            javascriptConnector.call("setMdContent", "");
+            readmeText = "";
+            javascriptConnector.call("setMdContent", readmeText);
         } else {
             this.initGitProperties(selectedProject);
             projectNameField.setText(selectedProject.getProjectName());
