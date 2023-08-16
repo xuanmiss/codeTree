@@ -43,6 +43,7 @@ public class ProjectUtil {
             if (isGitDir(files[i])) {
                 codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_PROJECT);
                 ProjectContext.projectList.add(codeProject);
+                ProjectContext.projectMap.put(codeProject.getProjectCode(), codeProject);
                 parentProject.getValue().getSubProjectList().add(codeProject);
                 parentProject.getChildren().add(treeItem);
 //                dirList.add(files[i]);
@@ -50,6 +51,8 @@ public class ProjectUtil {
             }
             if (files[i].isDirectory()) {
                 codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_CATALOG);
+                ProjectContext.projectList.add(codeProject);
+                ProjectContext.projectMap.put(codeProject.getProjectCode(), codeProject);
                 parentProject.getValue().getSubProjectList().add(codeProject);
                 parentProject.getChildren().add(treeItem);
                 findSubDir(files[i], treeItem);
