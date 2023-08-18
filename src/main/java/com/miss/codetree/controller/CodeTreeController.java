@@ -168,6 +168,8 @@ public class CodeTreeController implements Initializable {
 
     private boolean onSearch = false;
 
+    private CheckBox deleteWithSubProjects;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -283,21 +285,31 @@ public class CodeTreeController implements Initializable {
     }
 
     public void deleteProject(MouseEvent mouseEvent) throws Exception {
+        TreeItem<CodeProject> treeItem = treeView.getSelectionModel().getSelectedItem();
+        CodeProject codeProject = treeItem.getValue();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("删除项目");
         alert.setHeaderText("删除项目");
         alert.setContentText("是否确认删除？");
-
+        if(!treeItem.isLeaf()) {
+            deleteWithSubProjects = new CheckBox("自动删除子项目");
+            alert.setGraphic(deleteWithSubProjects);
+        }
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-//            int i = treeView.getSelectionModel().getSelectedIndex();
-            TreeItem<CodeProject> treeItem = treeView.getSelectionModel().getSelectedItem();
-            CodeProject codeProject = treeItem.getValue();
             if (!treeItem.isLeaf()) {
-                treeView.getSelectionModel().getSelectedItem().getParent().getChildren().addAll(treeItem.getChildren());
+                if (!deleteWithSubProjects.isSelected()) {
+                    treeView.getSelectionModel().getSelectedItem().getParent().getChildren().addAll(treeItem.getChildren());
+                    treeView.getSelectionModel().getSelectedItem().getParent().getChildren().remove(treeItem);
+                    ProjectContext.removeCodeProject(codeProject);
+                }else {
+                    treeView.getSelectionModel().getSelectedItem().getParent().getChildren().remove(treeItem);
+                    ProjectContext.removeCodeProjectWithSubProject(codeProject);
+                }
+            }else {
+                treeView.getSelectionModel().getSelectedItem().getParent().getChildren().remove(treeItem);
+                ProjectContext.removeCodeProject(codeProject);
             }
-            treeView.getSelectionModel().getSelectedItem().getParent().getChildren().remove(treeItem);
-            ProjectContext.removeCodeProject(codeProject);
         } else {
             System.out.println("cancel");
         }

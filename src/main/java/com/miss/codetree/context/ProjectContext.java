@@ -213,18 +213,29 @@ public class ProjectContext {
         projectList = projectList.stream()
                 .filter(codeProject1 -> !codeProject1.getProjectCode().equals(codeProject.getProjectCode()))
                 .collect(Collectors.toList());
-        deleteFromRootCodeProject(Collections.singletonList(rootCodeProject), codeProject);
+        deleteFromRootCodeProject(Collections.singletonList(rootCodeProject), codeProject, false);
         saveCodeProjectConfig(rootCodeProject);
     }
 
-    private static void deleteFromRootCodeProject(List<CodeProject> rootCodeProjectList, CodeProject codeProject) {
+    public static void removeCodeProjectWithSubProject(CodeProject codeProject) {
+        List<CodeProject> subProjects = new ArrayList<>();
+        tileProject(codeProject, subProjects);
+        for(CodeProject codeProject1 : subProjects) {
+            projectMap.remove(codeProject1.getProjectCode());
+            projectList.remove(codeProject1);
+        }
+        deleteFromRootCodeProject(Collections.singletonList(rootCodeProject), codeProject, true);
+        saveCodeProjectConfig(rootCodeProject);
+    }
+
+    private static void deleteFromRootCodeProject(List<CodeProject> rootCodeProjectList, CodeProject codeProject, Boolean includeSubProject) {
 
         for (CodeProject project: rootCodeProjectList) {
             List<CodeProject> subProjectList = project.getSubProjectList();
             if (subProjectList != null && !subProjectList.isEmpty()) {
                 for (int i = 0; i < subProjectList.size(); i++) {
                     if (subProjectList.get(i).getProjectCode().equalsIgnoreCase(codeProject.getProjectCode())) {
-                        if (subProjectList.get(i).getSubProjectList() != null && !subProjectList.get(i).getSubProjectList().isEmpty()) {
+                        if (subProjectList.get(i).getSubProjectList() != null && !subProjectList.get(i).getSubProjectList().isEmpty() && !includeSubProject) {
                             LinkedList<CodeProject> ssubProjects = subProjectList.get(i).getSubProjectList();
                             subProjectList.remove(i);
                             subProjectList.addAll(ssubProjects);
@@ -234,7 +245,7 @@ public class ProjectContext {
                         return;
                     }
                 }
-                deleteFromRootCodeProject(subProjectList, codeProject);
+                deleteFromRootCodeProject(subProjectList, codeProject, includeSubProject);
             }
         }
     }
