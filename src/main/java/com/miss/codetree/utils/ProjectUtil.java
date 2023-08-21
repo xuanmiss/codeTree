@@ -7,10 +7,7 @@ import com.miss.codetree.entity.CodeProject;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author xuanmiss
@@ -62,6 +59,6 @@ public class ProjectUtil {
     }
 
     private static boolean isGitDir(File f) {
-        return f.isDirectory() && Arrays.asList(f.list()).contains(".git");
+        return f.isDirectory() && Arrays.asList(Objects.requireNonNull(f.list())).contains(".git");
     }
 }

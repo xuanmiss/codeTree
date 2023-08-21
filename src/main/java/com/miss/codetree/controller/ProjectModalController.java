@@ -81,7 +81,7 @@ public class ProjectModalController implements Initializable {
         codeProject.setProjectDir(projectDirField.getText());
         codeProject.setProjectAbstract(projectAbstractField.getText());
         codeProject.setProjectType(projectTypeChoice.getValue());
-        TreeItem currentItem = new TreeItem(codeProject);
+        TreeItem<CodeProject> currentItem = new TreeItem<>(codeProject);
         parentCodeProjectItem.getChildren().add(currentItem);
         if(dirSubProjectChoose.isSelected()) {
             ProjectUtil.generateInTreeProject(currentItem);
@@ -109,7 +109,6 @@ public class ProjectModalController implements Initializable {
 
             ProjectContext.directoryChooser.setInitialDirectory(new File(ProjectContext.dirChooseBaseDir));
             File selectedDirectory = ProjectContext.directoryChooser.showDialog(window);
-//            System.out.println(selectedDirectory.getAbsolutePath());
             String dirPath = selectedDirectory.getAbsolutePath();
             String projectName = selectedDirectory.getName();
             String projectType = CodeProjectConstant.PROJECT_TYPE_PROJECT;
