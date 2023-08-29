@@ -1,5 +1,6 @@
 package com.miss.codetree;
 
+import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.context.ProjectContext;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,10 @@ public class CodeTreeApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 900, 600);
         primaryStage.setTitle("CodeTree");
         primaryStage.setScene(scene);
+
+
+        primaryStage.getIcons().add(ImageConstant.codeTreeImage);
+
         primaryStage.show();
     }
 }
