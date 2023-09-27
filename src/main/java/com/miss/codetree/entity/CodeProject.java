@@ -113,6 +113,22 @@ public class CodeProject implements Serializable {
         this.projectType = projectType;
     }
 
+    public boolean isExpandStatus() {
+        return expandStatus;
+    }
+
+    public void setExpandStatus(boolean expandStatus) {
+        this.expandStatus = expandStatus;
+    }
+
+    public boolean isSelectedStatus() {
+        return selectedStatus;
+    }
+
+    public void setSelectedStatus(boolean selectedStatus) {
+        this.selectedStatus = selectedStatus;
+    }
+
     public LinkedList<CodeProject> getSubProjectList() {
         if (subProjectList == null) {
             subProjectList = new LinkedList<>();
