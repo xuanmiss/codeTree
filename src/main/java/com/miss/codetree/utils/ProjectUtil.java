@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.entity.CodeProject;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;
@@ -52,6 +54,13 @@ public class ProjectUtil {
                 ProjectContext.projectMap.put(codeProject.getProjectCode(), codeProject);
                 parentProject.getValue().getSubProjectList().add(codeProject);
                 parentProject.getChildren().add(treeItem);
+                treeItem.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
+                    @Override
+                    public void handle(Event e) {
+                        TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
+                        System.out.println(source.getValue().getProjectName());
+                    }
+                });
                 findSubDir(files[i], treeItem);
             }
 
