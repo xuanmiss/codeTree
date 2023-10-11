@@ -5,14 +5,21 @@ import com.miss.codetree.CodeTreeApplication;
 import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.entity.CodeProject;
+import com.miss.codetree.entity.CodeProjectConfig;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 
+import javafx.event.EventHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,6 +57,8 @@ public class ProjectContext {
 
     public static DirectoryChooser directoryChooser = new DirectoryChooser();
 
+    public static CodeProjectConfig codeProjectConfig;
+
     static {
         initProjectContext();
 
@@ -66,6 +75,13 @@ public class ProjectContext {
     private static TreeItem<CodeProject> initTreeRootItem() {
         Node imageIcon = new ImageView(ImageConstant.addImage);
         TreeItem<CodeProject> rootItem = new TreeItem<>(rootCodeProject, imageIcon);
+        rootItem.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
+            @Override
+            public void handle(Event e) {
+                TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
+                System.out.println(source.getValue().getProjectName());
+            }
+        });
         initTreeData(rootItem, rootCodeProject.getSubProjectList());
         return rootItem;
     }
@@ -78,6 +94,14 @@ public class ProjectContext {
                 if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(project.getProjectType())) {
                     Node imageIcon = new ImageView(ImageConstant.addImage);
                     item.setGraphic(imageIcon);
+                    item.setExpanded(project.isExpandStatus());
+                    item.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
+                        @Override
+                        public void handle(Event e) {
+                            TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
+                            System.out.println(source.getValue().getProjectName());
+                        }
+                    });
                 }
                 rootNode.getChildren().add(item);
                 List<CodeProject> projectList = project.getSubProjectList();
@@ -90,6 +114,7 @@ public class ProjectContext {
     public static void expandAllNode(TreeItem<CodeProject> treeItem) {
         if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(treeItem.getValue().getProjectType())) {
             treeItem.setExpanded(true);
+            treeItem.getValue().setExpandStatus(true);
             for (TreeItem<CodeProject> treeItem1 : treeItem.getChildren()) {
                 expandAllNode(treeItem1);
             }
@@ -99,6 +124,7 @@ public class ProjectContext {
     public static void packupAllNode(TreeItem<CodeProject> treeItem) {
         if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(treeItem.getValue().getProjectType())) {
             treeItem.setExpanded(false);
+            treeItem.getValue().setExpandStatus(false);
             for (TreeItem<CodeProject> treeItem1 : treeItem.getChildren()) {
                 packupAllNode(treeItem1);
             }
