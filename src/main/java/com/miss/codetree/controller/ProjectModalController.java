@@ -8,6 +8,8 @@ import com.miss.codetree.utils.ProjectUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -82,6 +84,13 @@ public class ProjectModalController implements Initializable {
         codeProject.setProjectAbstract(projectAbstractField.getText());
         codeProject.setProjectType(projectTypeChoice.getValue());
         TreeItem<CodeProject> currentItem = new TreeItem<>(codeProject);
+//        currentItem.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
+//            @Override
+//            public void handle(Event e) {
+//                TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
+//                System.out.println(source.getValue().getProjectName());
+//            }
+//        });
         parentCodeProjectItem.getChildren().add(currentItem);
         if(dirSubProjectChoose.isSelected()) {
             ProjectUtil.generateInTreeProject(currentItem);
