@@ -75,13 +75,13 @@ public class ProjectContext {
     private static TreeItem<CodeProject> initTreeRootItem() {
         Node imageIcon = new ImageView(ImageConstant.addImage);
         TreeItem<CodeProject> rootItem = new TreeItem<>(rootCodeProject, imageIcon);
-        rootItem.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
-            @Override
-            public void handle(Event e) {
-                TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
-                System.out.println(source.getValue().getProjectName());
-            }
-        });
+//        rootItem.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
+//            @Override
+//            public void handle(Event e) {
+//                TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
+//                System.out.println(source.getValue().getProjectName());
+//            }
+//        });
         initTreeData(rootItem, rootCodeProject.getSubProjectList());
         return rootItem;
     }
@@ -95,13 +95,13 @@ public class ProjectContext {
                     Node imageIcon = new ImageView(ImageConstant.addImage);
                     item.setGraphic(imageIcon);
                     item.setExpanded(project.isExpandStatus());
-                    item.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
-                        @Override
-                        public void handle(Event e) {
-                            TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
-                            System.out.println(source.getValue().getProjectName());
-                        }
-                    });
+//                    item.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
+//                        @Override
+//                        public void handle(Event e) {
+//                            TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
+//                            System.out.println(source.getValue().getProjectName());
+//                        }
+//                    });
                 }
                 rootNode.getChildren().add(item);
                 List<CodeProject> projectList = project.getSubProjectList();
