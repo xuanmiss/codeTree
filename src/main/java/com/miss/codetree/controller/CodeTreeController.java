@@ -221,6 +221,7 @@ public class CodeTreeController implements Initializable {
     }
 
     private void itemSelectedListener(CodeProject selectedProject) {
+        ProjectContext.codeProjectConfig.setSelectedProjecatCode(selectedProject.getProjectCode());
 
         if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
             projectNameField.setText(selectedProject.getProjectName());
