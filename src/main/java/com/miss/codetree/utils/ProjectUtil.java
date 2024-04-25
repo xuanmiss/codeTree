@@ -54,13 +54,13 @@ public class ProjectUtil {
                 ProjectContext.projectMap.put(codeProject.getProjectCode(), codeProject);
                 parentProject.getValue().getSubProjectList().add(codeProject);
                 parentProject.getChildren().add(treeItem);
-                treeItem.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
-                    @Override
-                    public void handle(Event e) {
-                        TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
-                        System.out.println(source.getValue().getProjectName());
-                    }
-                });
+//                treeItem.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
+//                    @Override
+//                    public void handle(Event e) {
+//                        TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
+//                        System.out.println(source.getValue().getProjectName());
+//                    }
+//                });
                 findSubDir(files[i], treeItem);
             }
 
