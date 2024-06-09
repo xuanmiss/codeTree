@@ -40,6 +40,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.miss.codetree.context.ProjectContext.saveCodeProjectConfig;
+import static com.miss.codetree.context.ProjectContext.updateSelectedProject;
 import static javafx.scene.input.KeyCode.ENTER;
 
 
@@ -222,7 +224,7 @@ public class CodeTreeController implements Initializable {
 
     private void itemSelectedListener(CodeProject selectedProject) {
         ProjectContext.codeProjectConfig.setSelectedProjecatCode(selectedProject.getProjectCode());
-
+        updateSelectedProject(ProjectContext.rootCodeProject);
         if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
             projectNameField.setText(selectedProject.getProjectName());
             projectDirField.setText(selectedProject.getProjectDir());

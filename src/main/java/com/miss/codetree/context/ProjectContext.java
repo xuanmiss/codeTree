@@ -198,6 +198,15 @@ public class ProjectContext {
         }
     }
 
+    public static void updateSelectedProject(CodeProject codeProject) {
+        try {
+            codeProjectConfig.setSelectedProjecatCode(codeProject.getProjectCode());
+            objectMapper.writeValue(f, codeProjectConfig);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void tileProject(CodeProject rootCodeProject, List<CodeProject> projectList) {
         projectList.add(rootCodeProject);
         if (rootCodeProject.getSubProjectList() != null) {
