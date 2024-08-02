@@ -66,7 +66,9 @@ public class ProjectContext {
     }
 
     private static void initProjectContext() {
+        codeProjectConfig = new CodeProjectConfig();
         rootCodeProject = initRootProject();
+        codeProjectConfig.setCodeProject(rootCodeProject);
         projectList = initProjectList();
         projectMap = initProjectMap();
         treeItem = initTreeRootItem();
@@ -135,7 +137,7 @@ public class ProjectContext {
         CodeProject codeProject = new CodeProject();
         if (f.exists() && f.length() > 0) {
             try {
-                codeProject = objectMapper.readValue(f, CodeProject.class);
+                codeProject = objectMapper.readValue(f, CodeProjectConfig.class).getCodeProject();
             } catch (IOException e) {
                 e.printStackTrace();
                 codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_CATALOG);
@@ -189,7 +191,8 @@ public class ProjectContext {
 
     public static void saveCodeProjectConfig(CodeProject rootCodeProject) {
         try {
-            objectMapper.writeValue(f, rootCodeProject);
+            codeProjectConfig.setCodeProject(rootCodeProject);
+            objectMapper.writeValue(f, codeProjectConfig);
         } catch (IOException e) {
             e.printStackTrace();
         }
