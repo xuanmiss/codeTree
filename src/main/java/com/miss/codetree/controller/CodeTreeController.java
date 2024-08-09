@@ -179,6 +179,8 @@ public class CodeTreeController implements Initializable {
         initCodeProjectTreeView();
         initFuncButton();
         initSearchListView();
+        ProjectContext.expandSelectPreviousItem();
+        this.itemSelectedListener(ProjectContext.selectedItem.getValue());
     }
 
     private void initMDPane() {
