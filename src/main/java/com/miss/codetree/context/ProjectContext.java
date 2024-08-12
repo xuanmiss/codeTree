@@ -89,7 +89,7 @@ public class ProjectContext {
     }
 
     private static void initTreeData(TreeItem<CodeProject> rootNode, List<CodeProject> codeProjects) {
-
+        // 这里需要添加上次选中的事件触发。看看是初始化之后遍历触发一次选择事件
         if (codeProjects != null && !codeProjects.isEmpty()) {
             for (CodeProject project : codeProjects) {
                 TreeItem<CodeProject> item = new TreeItem<>(project);
