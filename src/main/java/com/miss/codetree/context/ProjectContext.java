@@ -9,6 +9,7 @@ import com.miss.codetree.entity.CodeProjectConfig;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 
@@ -59,6 +60,8 @@ public class ProjectContext {
 
     public static CodeProjectConfig codeProjectConfig;
 
+    public static TreeItem<CodeProject> selectedItem;
+
     static {
         initProjectContext();
 
@@ -93,17 +96,13 @@ public class ProjectContext {
         if (codeProjects != null && !codeProjects.isEmpty()) {
             for (CodeProject project : codeProjects) {
                 TreeItem<CodeProject> item = new TreeItem<>(project);
+                if (project.getProjectCode().equals(codeProjectConfig.getSelectedProjecatCode())) {
+                    ProjectContext.selectedItem = item;
+                }
                 if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(project.getProjectType())) {
                     Node imageIcon = new ImageView(ImageConstant.addImage);
                     item.setGraphic(imageIcon);
                     item.setExpanded(project.isExpandStatus());
-//                    item.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler() {
-//                        @Override
-//                        public void handle(Event e) {
-//                            TreeItem<CodeProject> source = (TreeItem<CodeProject>) e.getSource();
-//                            System.out.println(source.getValue().getProjectName());
-//                        }
-//                    });
                 }
                 rootNode.getChildren().add(item);
                 List<CodeProject> projectList = project.getSubProjectList();
@@ -201,6 +200,7 @@ public class ProjectContext {
     public static void updateSelectedProject(CodeProject codeProject) {
         try {
             codeProjectConfig.setSelectedProjecatCode(codeProject.getProjectCode());
+
             objectMapper.writeValue(f, codeProjectConfig);
         }catch (IOException e) {
             e.printStackTrace();
@@ -292,5 +292,16 @@ public class ProjectContext {
         f.delete();
         initProjectContext();
 
+    }
+
+
+    public static void expandSelectPreviousItem() {
+        TreeItem<CodeProject> selectedProject = ProjectContext.selectedItem;
+        // 从目标节点开始向上遍历，直到找到根节点
+        while (selectedProject != null && !selectedProject.equals(ProjectContext.treeItem)) {
+            treeItem.setExpanded(true);
+            treeItem.getValue().setExpandStatus(true);
+            treeItem = treeItem.getParent();
+        }
     }
 }
