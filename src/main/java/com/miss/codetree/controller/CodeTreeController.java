@@ -6,6 +6,7 @@ import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.context.ProjectContext;
 import com.miss.codetree.entity.CodeProject;
+import com.miss.codetree.utils.ProjectUtil;
 import com.miss.codetree.utils.ShellUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -230,7 +231,7 @@ public class CodeTreeController implements Initializable {
             readmeText = "";
             javascriptConnector.call("setMdContent", readmeText);
         } else {
-            this.initGitProperties(selectedProject);
+            ProjectUtil.initProjectGitInfo(selectedProject);
             projectNameField.setText(selectedProject.getProjectName());
             projectDirField.setText(selectedProject.getProjectDir());
             projectBranchField.setText(selectedProject.getProjectBranch());
@@ -248,26 +249,7 @@ public class CodeTreeController implements Initializable {
         }
     }
 
-    private void initGitProperties(CodeProject codeProject) {
-        String dir = codeProject.getProjectDir();
-        String branchCmd = String.format("cd %s", dir) + " && " + "git rev-parse --abbrev-ref HEAD";
-        try {
-            String branch = ShellUtil.runShell(branchCmd);
-            codeProject.setProjectBranch(branch);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        String remoteCmd = String.format("cd %s", dir) + " && " + "git remote -v";
-        try {
-            String res = ShellUtil.runShell(remoteCmd);
-            String remote = (res.split("\t")[1]).split("\\(")[0].trim();
-            codeProject.setProjectRemote(remote);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public void saveCodeProject() throws IOException {
         TreeItem<CodeProject> treeItem = treeView.getSelectionModel().getSelectedItem();
