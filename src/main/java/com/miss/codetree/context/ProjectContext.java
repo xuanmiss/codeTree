@@ -1,26 +1,17 @@
 package com.miss.codetree.context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.miss.codetree.CodeTreeApplication;
 import com.miss.codetree.constant.CodeProjectConstant;
 import com.miss.codetree.constant.ImageConstant;
 import com.miss.codetree.entity.CodeProject;
 import com.miss.codetree.entity.CodeProjectConfig;
-import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 
-import javafx.event.EventHandler;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,11 +61,36 @@ public class ProjectContext {
 
     private static void initProjectContext() {
         codeProjectConfig = new CodeProjectConfig();
-        rootCodeProject = initRootProject();
-        codeProjectConfig.setCodeProject(rootCodeProject);
+        loadCodeProjectConfig();
+        rootCodeProject = codeProjectConfig.getCodeProject();
         projectList = initProjectList();
         projectMap = initProjectMap();
         treeItem = initTreeRootItem();
+    }
+
+    private static void loadCodeProjectConfig() {
+        CodeProject codeProject = new CodeProject();
+        if (f.exists() && f.length() > 0) {
+            try {
+                codeProjectConfig = objectMapper.readValue(f, CodeProjectConfig.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_CATALOG);
+                codeProject.setProjectName("root");
+                codeProject.setProjectCode(UUID.randomUUID().toString());
+                codeProjectConfig.setCodeProject(codeProject);
+            }
+        }else {
+            try {
+                f.createNewFile();
+                codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_CATALOG);
+                codeProject.setProjectName("root");
+                codeProject.setProjectCode(UUID.randomUUID().toString());
+                codeProjectConfig.setCodeProject(codeProject);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static TreeItem<CodeProject> initTreeRootItem() {
@@ -96,7 +112,7 @@ public class ProjectContext {
         if (codeProjects != null && !codeProjects.isEmpty()) {
             for (CodeProject project : codeProjects) {
                 TreeItem<CodeProject> item = new TreeItem<>(project);
-                if (project.getProjectCode().equals(codeProjectConfig.getSelectedProjecatCode())) {
+                if (project.getProjectCode().equals(codeProjectConfig.getSelectedProjectCode())) {
                     ProjectContext.selectedItem = item;
                 }
                 if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(project.getProjectType())) {
@@ -199,7 +215,7 @@ public class ProjectContext {
 
     public static void updateSelectedProject(CodeProject codeProject) {
         try {
-            codeProjectConfig.setSelectedProjecatCode(codeProject.getProjectCode());
+            codeProjectConfig.setSelectedProjectCode(codeProject.getProjectCode());
 
             objectMapper.writeValue(f, codeProjectConfig);
         }catch (IOException e) {

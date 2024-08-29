@@ -16,7 +16,7 @@ public class CodeProjectConfig implements Serializable {
 
     private CodeProject codeProject;
 
-    private String selectedProjecatCode;
+    private String selectedProjectCode;
 
 
     public CodeProject getCodeProject() {
@@ -27,12 +27,12 @@ public class CodeProjectConfig implements Serializable {
         this.codeProject = codeProject;
     }
 
-    public String getSelectedProjecatCode() {
-        return selectedProjecatCode;
+    public String getSelectedProjectCode() {
+        return selectedProjectCode;
     }
 
-    public void setSelectedProjecatCode(String selectedProjecatCode) {
-        this.selectedProjecatCode = selectedProjecatCode;
+    public void setSelectedProjectCode(String selectedProjectCode) {
+        this.selectedProjectCode = selectedProjectCode;
     }
 
     @Override
@@ -40,19 +40,19 @@ public class CodeProjectConfig implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CodeProjectConfig that = (CodeProjectConfig) o;
-        return Objects.equals(codeProject, that.codeProject) && Objects.equals(selectedProjecatCode, that.selectedProjecatCode);
+        return Objects.equals(codeProject, that.codeProject) && Objects.equals(selectedProjectCode, that.selectedProjectCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codeProject, selectedProjecatCode);
+        return Objects.hash(codeProject, selectedProjectCode);
     }
 
     @Override
     public String toString() {
         return "CodeProjectConfig{" +
                 "codeProject=" + codeProject +
-                ", selectedProjecatCode='" + selectedProjecatCode + '\'' +
+                ", selectedProjecatCode='" + selectedProjectCode + '\'' +
                 '}';
     }
 }

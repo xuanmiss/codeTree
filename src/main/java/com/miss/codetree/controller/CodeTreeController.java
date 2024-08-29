@@ -13,7 +13,6 @@ import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -23,9 +22,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import netscape.javascript.JSObject;
 import org.apache.commons.io.FileUtils;
 
@@ -33,14 +29,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
-import static com.miss.codetree.context.ProjectContext.saveCodeProjectConfig;
 import static com.miss.codetree.context.ProjectContext.updateSelectedProject;
 import static javafx.scene.input.KeyCode.ENTER;
 
@@ -180,7 +172,9 @@ public class CodeTreeController implements Initializable {
         initFuncButton();
         initSearchListView();
         ProjectContext.expandSelectPreviousItem();
-        this.itemSelectedListener(ProjectContext.selectedItem.getValue());
+        if (ProjectContext.selectedItem != null) {
+            this.itemSelectedListener(ProjectContext.selectedItem.getValue());
+        }
     }
 
     private void initMDPane() {
@@ -225,7 +219,7 @@ public class CodeTreeController implements Initializable {
     }
 
     private void itemSelectedListener(CodeProject selectedProject) {
-        ProjectContext.codeProjectConfig.setSelectedProjecatCode(selectedProject.getProjectCode());
+        ProjectContext.codeProjectConfig.setSelectedProjectCode(selectedProject.getProjectCode());
         updateSelectedProject(ProjectContext.rootCodeProject);
         if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
             projectNameField.setText(selectedProject.getProjectName());
@@ -261,7 +255,7 @@ public class CodeTreeController implements Initializable {
             String branch = ShellUtil.runShell(branchCmd);
             codeProject.setProjectBranch(branch);
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
 
         String remoteCmd = String.format("cd %s", dir) + " && " + "git remote -v";
@@ -270,7 +264,7 @@ public class CodeTreeController implements Initializable {
             String remote = (res.split("\t")[1]).split("\\(")[0].trim();
             codeProject.setProjectRemote(remote);
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
 
     }
