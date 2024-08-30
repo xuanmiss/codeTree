@@ -41,6 +41,8 @@ public class ProjectUtil {
             TreeItem<CodeProject> treeItem = new TreeItem<>(codeProject);
             if (isGitDir(files[i])) {
                 codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_PROJECT);
+                // 这里可能会很慢
+                ProjectUtil.initProjectGitInfo(codeProject);
                 ProjectContext.projectList.add(codeProject);
                 ProjectContext.projectMap.put(codeProject.getProjectCode(), codeProject);
                 parentProject.getValue().getSubProjectList().add(codeProject);
@@ -69,5 +71,26 @@ public class ProjectUtil {
 
     private static boolean isGitDir(File f) {
         return f.isDirectory() && Arrays.asList(Objects.requireNonNull(f.list())).contains(".git");
+    }
+
+    public static void initProjectGitInfo(CodeProject codeProject) {
+        String dir = codeProject.getProjectDir();
+        String branchCmd = String.format("cd %s", dir) + " && " + "git rev-parse --abbrev-ref HEAD";
+        try {
+            String branch = ShellUtil.runShell(branchCmd);
+            codeProject.setProjectBranch(branch);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String remoteCmd = String.format("cd %s", dir) + " && " + "git remote -v";
+        try {
+            String res = ShellUtil.runShell(remoteCmd);
+            String remote = (res.split("\t")[1]).split("\\(")[0].trim();
+            codeProject.setProjectRemote(remote);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
