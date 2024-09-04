@@ -59,6 +59,8 @@ public class ButtonTreeViewCell implements Callback<TreeView<CodeProject>, TreeC
                     setGraphic(null);
                     setText(null);
                 } else {
+                    item.setExpandStatus(this.getTreeItem().isExpanded());
+                    ProjectContext.updateItem(item);
                     // We only show the custom cell if it is a leaf, meaning it has
                     // no children.
                     if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(item.getProjectType())) {
@@ -107,6 +109,7 @@ public class ButtonTreeViewCell implements Callback<TreeView<CodeProject>, TreeC
                         setText(null);
                     }
                 }
+
             }
         };
         cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
