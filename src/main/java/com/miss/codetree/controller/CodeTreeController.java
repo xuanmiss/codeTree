@@ -172,10 +172,8 @@ public class CodeTreeController implements Initializable {
         initCodeProjectTreeView();
         initFuncButton();
         initSearchListView();
-        ProjectContext.expandSelectPreviousItem();
-        if (ProjectContext.selectedItem != null) {
-            this.itemSelectedListener(ProjectContext.selectedItem.getValue());
-        }
+//        ProjectContext.expandSelectPreviousItem();
+
     }
 
     private void initMDPane() {
@@ -186,6 +184,11 @@ public class CodeTreeController implements Initializable {
             if (Worker.State.SUCCEEDED == newValue) {
                 javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
                 javascriptConnector.call("setMdContent", readmeText);
+                if (ProjectContext.selectedItem != null) {
+                    treeView.getSelectionModel().select(ProjectContext.selectedItem);
+                    treeView.scrollTo(getTreeItemIndex(treeView, ProjectContext.selectedItem));
+//                    treeView.scrollTo(ProjectContext.projectList.indexOf(ProjectContext.selectedItem.getValue()));
+                }
             }
         });
     }
@@ -220,8 +223,7 @@ public class CodeTreeController implements Initializable {
     }
 
     private void itemSelectedListener(CodeProject selectedProject) {
-        ProjectContext.codeProjectConfig.setSelectedProjectCode(selectedProject.getProjectCode());
-        updateSelectedProject(ProjectContext.rootCodeProject);
+        updateSelectedProject(selectedProject.getProjectCode());
         if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equals(selectedProject.getProjectType())) {
             projectNameField.setText(selectedProject.getProjectName());
             projectDirField.setText(selectedProject.getProjectDir());
@@ -370,5 +372,36 @@ public class CodeTreeController implements Initializable {
     public void clearTree(MouseEvent mouseEvent) {
         ProjectContext.clearCodeProject();
         initCodeProjectTreeView();
+    }
+
+
+    private int getTreeItemIndex(TreeView<CodeProject> treeView, TreeItem<CodeProject> item) {
+        if (item == null) {
+            return -1;
+        }
+
+        TreeItem<CodeProject> root = treeView.getRoot();
+        Integer index = 0;
+        index = getTreeItemIndexRecursive(root, item, index);
+        return index > 5 ? index - 5 : 0;
+    }
+
+    private Integer getTreeItemIndexRecursive(TreeItem<CodeProject> current, TreeItem<CodeProject> target, Integer index) {
+        if (current.equals(target)) {
+           return index;
+        }
+
+        if (current.getChildren() != null && current.isExpanded()) {
+            for (int i = 0; i < current.getChildren().size(); i++) {
+                TreeItem<CodeProject> child = current.getChildren().get(i);
+                index += 1;
+                Integer childIndex = getTreeItemIndexRecursive(child, target, index);
+                if (childIndex != -1) {
+                    return childIndex;
+                }
+
+            }
+        }
+        return -1;
     }
 }
