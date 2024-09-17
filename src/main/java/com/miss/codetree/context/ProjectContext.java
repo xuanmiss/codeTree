@@ -35,7 +35,7 @@ public class ProjectContext {
     public static CodeProject rootCodeProject;
 //    = initRootProject();
 
-    public static List<CodeProject> projectList;
+    public static LinkedList<CodeProject> projectList;
 //    = initProjectList();
 
     public static Map<String, CodeProject> projectMap;
@@ -174,8 +174,8 @@ public class ProjectContext {
     }
 
 
-    private static List<CodeProject> initProjectList() {
-        List<CodeProject> projectList = new ArrayList<>();
+    private static LinkedList<CodeProject> initProjectList() {
+        LinkedList<CodeProject> projectList = new LinkedList<>();
         if (rootCodeProject != null ) {
             tileProject(rootCodeProject, projectList);
         }
@@ -213,9 +213,9 @@ public class ProjectContext {
         }
     }
 
-    public static void updateSelectedProject(CodeProject codeProject) {
+    public static void updateSelectedProject(String selectedProjectCode) {
         try {
-            codeProjectConfig.setSelectedProjectCode(codeProject.getProjectCode());
+            codeProjectConfig.setSelectedProjectCode(selectedProjectCode);
 
             objectMapper.writeValue(f, codeProjectConfig);
         }catch (IOException e) {
@@ -266,7 +266,7 @@ public class ProjectContext {
         }
         projectList = projectList.stream()
                 .filter(codeProject1 -> !codeProject1.getProjectCode().equals(codeProject.getProjectCode()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(LinkedList::new));
         deleteFromRootCodeProject(Collections.singletonList(rootCodeProject), codeProject, false);
         saveCodeProjectConfig(rootCodeProject);
     }
@@ -311,13 +311,13 @@ public class ProjectContext {
     }
 
 
-    public static void expandSelectPreviousItem() {
-        TreeItem<CodeProject> selectedProject = ProjectContext.selectedItem;
-        // 从目标节点开始向上遍历，直到找到根节点
-        while (selectedProject != null && !selectedProject.equals(ProjectContext.treeItem)) {
-            treeItem.setExpanded(true);
-            treeItem.getValue().setExpandStatus(true);
-            treeItem = treeItem.getParent();
-        }
-    }
+//    public static void expandSelectPreviousItem() {
+//        TreeItem<CodeProject> selectedProject = ProjectContext.selectedItem;
+//        // 从目标节点开始向上遍历，直到找到根节点
+//        while (selectedProject != null && !selectedProject.equals(ProjectContext.treeItem)) {
+//            treeItem.setExpanded(true);
+//            treeItem.getValue().setExpandStatus(true);
+//            treeItem = treeItem.getParent();
+//        }
+//    }
 }
