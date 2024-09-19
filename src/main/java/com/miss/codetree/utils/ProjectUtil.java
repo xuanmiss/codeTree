@@ -7,15 +7,24 @@ import com.miss.codetree.entity.CodeProject;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author xuanmiss
  */
 public class ProjectUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static Logger logger = LoggerFactory.getLogger(ProjectUtil.class);
+
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(8);
 
     public static void generateInTreeProject(TreeItem<CodeProject> parentProject) {
         File f = new File(parentProject.getValue().getProjectDir());
@@ -42,7 +51,9 @@ public class ProjectUtil {
             if (isGitDir(files[i])) {
                 codeProject.setProjectType(CodeProjectConstant.PROJECT_TYPE_PROJECT);
                 // 这里可能会很慢
-                ProjectUtil.initProjectGitInfo(codeProject);
+
+                CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> ProjectUtil.initProjectGitInfo(codeProject),executorService);
+
                 ProjectContext.projectList.add(codeProject);
                 ProjectContext.projectMap.put(codeProject.getProjectCode(), codeProject);
                 parentProject.getValue().getSubProjectList().add(codeProject);
@@ -91,6 +102,8 @@ public class ProjectUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        logger.debug("init project: {} success", codeProject.getProjectName());
 
     }
+
 }
