@@ -165,6 +165,8 @@ public class CodeTreeController implements Initializable {
 
     private CheckBox deleteWithSubProjects;
 
+    private String webViewLocation;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -179,16 +181,20 @@ public class CodeTreeController implements Initializable {
     private void initMDPane() {
         webEngine = rightReadmeField.getEngine();
         webEngine.load(viewUrl);
+        webViewLocation = webEngine.getLocation();
         editFlag = false;
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (Worker.State.SUCCEEDED == newValue) {
-                javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
-                javascriptConnector.call("setMdContent", readmeText);
-                if (ProjectContext.selectedItem != null) {
-                    treeView.getSelectionModel().select(ProjectContext.selectedItem);
-                    treeView.scrollTo(getTreeItemIndex(treeView, ProjectContext.selectedItem));
+                if (webEngine.getLocation().equals(webViewLocation)) {
+                    javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
+                    javascriptConnector.call("setMdContent", readmeText);
+                    if (ProjectContext.selectedItem != null) {
+                        treeView.getSelectionModel().select(ProjectContext.selectedItem);
+                        treeView.scrollTo(getTreeItemIndex(treeView, ProjectContext.selectedItem));
 //                    treeView.scrollTo(ProjectContext.projectList.indexOf(ProjectContext.selectedItem.getValue()));
+                    }
                 }
+
             }
         });
     }
@@ -246,7 +252,12 @@ public class CodeTreeController implements Initializable {
 //                    ex.printStackTrace();
             }
             readmeText = projectReadme;
-            javascriptConnector.call("setMdContent", readmeText);
+            if (!Objects.equals(webViewLocation, webEngine.getLocation()))  {
+                webEngine.load(viewUrl);
+                webViewLocation = webEngine.getLocation();
+            } else {
+                javascriptConnector.call("setMdContent", readmeText);
+            }
 //                System.out.println(treeView.getSelectionModel().getSelectedItem().getValue().getProjectName());
         }
     }
@@ -332,12 +343,14 @@ public class CodeTreeController implements Initializable {
             editOrViewReadmeButton.setText("查看");
             editOrViewReadmeButton.setStyle("-fx-background-color: #13911b;");
             webEngine.load(editorUrl);
+            webViewLocation = webEngine.getLocation();
             editFlag = true;
 
         }else {
             editOrViewReadmeButton.setText("编辑");
             editOrViewReadmeButton.setStyle("-fx-background-color: #2196f3;");
             webEngine.load(viewUrl);
+            webViewLocation = webEngine.getLocation();
             editFlag = false;
 
         }
