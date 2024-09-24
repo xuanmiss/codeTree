@@ -39,6 +39,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: jar-artifact
+          path: ./jar-artifact
       - name: List files in the artifact directory
         run: ls -R ./jar-artifact
       - name: Create Release
