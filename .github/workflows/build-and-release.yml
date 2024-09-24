@@ -43,9 +43,15 @@ jobs:
       - name: List files in the artifact directory
         run: ls -R ./jar-artifact
 
+      - name: Extract tag name without 'v'
+        id: extract_tag
+        run: |
+          tag_name=$(basename ${{ github.ref }})
+          tag_name_without_v=${tag_name#v}
+          echo "TAG_NAME=$tag_name_without_v" >> $GITHUB_ENV
       - name: Rename JAR file
-        run: | 
-          mv ./jar-artifact/*.jar ./jar-artifact/app-${{ github.ref }}.jar
+        run: |
+          mv ./jar-artifact/*.jar ./jar-artifact/CodeTree-${{ env.TAG_NAME }}.jar
       - name: List files after renaming
         run: ls -R ./jar-artifact
       - name: Create Release
@@ -66,6 +72,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./jar-artifact/CodeTree-${{ github.ref }}.jar
-          asset_name: CodeTree-${{ github.ref }}.jar
+          asset_path: ./jar-artifact/CodeTree-${{ env.TAG_NAME }}.jar
+          asset_name: CodeTree-${{ env.TAG_NAME }}.jar.jar
           asset_content_type: application/octet-stream
