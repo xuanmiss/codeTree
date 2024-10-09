@@ -44,7 +44,8 @@ jobs:
         run: ls -R ./jar-artifact
 
       - name: Rename JAR file
-        run: | mv ./jar-artifact/*.jar ./jar-artifact/app-${{ github.ref }}.jar
+        run: | 
+          mv ./jar-artifact/*.jar ./jar-artifact/app-${{ github.ref }}.jar
       - name: List files after renaming
         run: ls -R ./jar-artifact
       - name: Create Release
