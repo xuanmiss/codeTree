@@ -73,5 +73,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./jar-artifact/CodeTree-${{ env.TAG_NAME }}.jar
-          asset_name: CodeTree-${{ env.TAG_NAME }}.jar.jar
+          asset_name: CodeTree-${{ env.TAG_NAME }}.jar
           asset_content_type: application/octet-stream
