@@ -10,8 +10,8 @@ package com.miss.codetree.constant;
  */
 public class CodeProjectConstant {
 
-    public CodeProjectConstant() {
-        throw new RuntimeException("can't init this class");
+    private CodeProjectConstant() {
+        throw new AssertionError("can't init this class");
     }
 
     public static final String PROJECT_TYPE_CATALOG = "catalog";

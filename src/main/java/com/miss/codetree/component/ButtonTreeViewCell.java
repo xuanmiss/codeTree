@@ -54,73 +54,78 @@ public class ButtonTreeViewCell implements Callback<TreeView<CodeProject>, TreeC
             protected void updateItem(CodeProject item, boolean empty) {
                 super.updateItem(item, empty);
 
-                // If the cell is empty we don't show anything.
                 if (isEmpty()) {
                     setGraphic(null);
                     setText(null);
                 } else {
-                    item.setExpandStatus(this.getTreeItem().isExpanded());
+                    item.setExpandStatus(getTreeItem().isExpanded());
                     ProjectContext.updateItem(item);
-                    // We only show the custom cell if it is a leaf, meaning it has
-                    // no children.
-                    if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(item.getProjectType())) {
 
-                        // A custom HBox that will contain your check box, label and
-                        // button.
-                        HBox cellBox = new HBox(10);
-                        ImageView imageView = new ImageView(ImageConstant.foldImage);
-                        if (this.getTreeItem().isExpanded()) {
-                            imageView = new ImageView(ImageConstant.expandImage);
-                        }
+                    HBox cellBox = createCellBox(item);
+                    setGraphic(cellBox);
+                    setText(null);
+                }
+            }
 
-
-//                CheckBox checkBox = new CheckBox();
-                        Label label = new Label(item.getProjectName());
-                        Button button = new Button();
-                        button.setGraphic(new ImageView(ImageConstant.addImage));
-                        button.setPadding(Insets.EMPTY);
-                        button.setBackground(Background.EMPTY);
-                        button.setOnMousePressed(e -> {
-                            button.setGraphic(new ImageView(ImageConstant.pressedAddImage));
-
-                        });
-                        button.setOnMouseClicked(e -> {
-                            try {
-                                TreeItem<CodeProject> currentTreeItem = getTreeItem();
-                                openProjectAddModal(currentTreeItem);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        });
-                        button.setOnMouseReleased(e -> {
-                            button.setGraphic(new ImageView(ImageConstant.addImage));
-                        });
-
-
-                        cellBox.getChildren().addAll(imageView, label, button);
-                        setGraphic(cellBox);
-                        setText(null);
-                    } else {
-                        HBox cellBox = new HBox(10);
-                        ImageView imageView = new ImageView(ImageConstant.projectImage);
-                        Label label = new Label(item.getProjectName());
-                        cellBox.getChildren().addAll(imageView, label);
-                        setGraphic(cellBox);
-                        setText(null);
-                    }
+            private HBox createCellBox(CodeProject item) {
+                ImageView imageView;
+                if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(item.getProjectType())) {
+                    imageView = new ImageView(this.getTreeItem().isExpanded() ? ImageConstant.expandImage : ImageConstant.foldImage);
+                } else {
+                    imageView = new ImageView(ImageConstant.projectImage);
                 }
 
+                Label label = new Label(item.getProjectName());
+
+                if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(item.getProjectType())) {
+                    Button button = createButton();
+                    return new HBox(10, imageView, label, button);
+                } else {
+                    return new HBox(10, imageView, label);
+                }
+            }
+
+            private Button createButton() {
+                Button button = new Button();
+                button.setGraphic(new ImageView(ImageConstant.addImage));
+                button.setPadding(Insets.EMPTY);
+                button.setBackground(Background.EMPTY);
+
+                button.setOnMousePressed(e -> {
+                    button.setGraphic(new ImageView(ImageConstant.pressedAddImage));
+                });
+
+                button.setOnMouseClicked(e -> {
+                    try {
+                        TreeItem<CodeProject> currentTreeItem = getTreeItem();
+                        openProjectAddModal(currentTreeItem);
+                    } catch (IOException ex) {
+                        handleException(ex);
+                    }
+                });
+
+                button.setOnMouseReleased(e -> {
+                    button.setGraphic(new ImageView(ImageConstant.addImage));
+                });
+
+                return button;
+            }
+
+            private void handleException(Exception ex) {
+                // 可以在这里记录日志或显示错误提示
+                ex.printStackTrace();
             }
         };
-        cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
-        cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
+
+        cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell));
+        cell.setOnDragOver((DragEvent event) -> dragOver(event, cell));
         cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
         cell.setOnDragDone((DragEvent event) -> clearDropLocation());
 
         return cell;
     }
 
-    private void dragDetected(MouseEvent e, TreeCell<CodeProject> cell, TreeView<CodeProject> treeView) {
+    private void dragDetected(MouseEvent e, TreeCell<CodeProject> cell) {
         draggedItem = cell.getTreeItem();
 
         // root can't be dragged
@@ -134,7 +139,7 @@ public class ButtonTreeViewCell implements Callback<TreeView<CodeProject>, TreeC
         e.consume();
     }
 
-    private void dragOver(DragEvent e, TreeCell<CodeProject> cell, TreeView<CodeProject> treeView) {
+    private void dragOver(DragEvent e, TreeCell<CodeProject> cell) {
         if (!e.getDragboard().hasContent(JAVA_FORMAT)) return;
         TreeItem<CodeProject> thisItem = cell.getTreeItem();
 

@@ -16,7 +16,7 @@ import javafx.util.Callback;
 public class ButtonLIstViewCell implements Callback<ListView<CodeProject>, ListCell<CodeProject>> {
     @Override
     public ListCell<CodeProject> call(ListView<CodeProject> tListView) {
-        ListCell<CodeProject> cell = new ListCell<CodeProject>() {
+        return new ListCell<CodeProject>() {
             @Override
             protected void updateItem(CodeProject item, boolean empty) {
                 super.updateItem(item, empty);
@@ -25,21 +25,14 @@ public class ButtonLIstViewCell implements Callback<ListView<CodeProject>, ListC
                     setText(null);
                 }else {
                     if (CodeProjectConstant.PROJECT_TYPE_CATALOG.equalsIgnoreCase(item.getProjectType())) {
-                        HBox cellBox = new HBox(10);
-                        ImageView imageView = new ImageView(ImageConstant.foldImage);
-                        Label label = new Label(item.getProjectName());
                         Button button = new Button();
                         button.setGraphic(new ImageView(ImageConstant.addImage));
                         button.setPadding(Insets.EMPTY);
                         button.setBackground(Background.EMPTY);
-                        button.setOnMousePressed(e -> {
-                            button.setGraphic(new ImageView(ImageConstant.pressedAddImage));
-
-                        });
+                        button.setOnMousePressed(e -> button.setGraphic(new ImageView(ImageConstant.pressedAddImage)));
                     }
                 }
             }
         };
-        return cell;
     }
 }
